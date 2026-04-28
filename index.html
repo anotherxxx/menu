@@ -1121,22 +1121,21 @@ function makeItemRow(item) {
       '</div>';
   }
 
-  /* Özel tablo (product-table) — "tableRows" alanı varsa */
-  if (item.tableRows) {
-    var headerTr = (item.tableHeader && item.tableHeader.tr) || {amount:'Miktar', price:'Fiyat'};
+  /* Özel tablo (product-table) — "table" alanı varsa */
+  if (item.table && item.table.rows) {
     var tHtml = '<div class="abox" style="margin-top:10px">' +
-      '<span class="alabel" style="color:var(--shop-accent)">' + esc((item.tableLabel && item.tableLabel.tr) || '') + '</span>' +
+      '<span class="alabel" style="color:var(--shop-accent)">' + esc((item.table.label && item.table.label.tr) || '') + '</span>' +
       '<table class="product-table"><thead><tr>' +
       '<th data-tr="Miktar" data-en="Amount">Miktar</th>' +
       '<th style="text-align:right" data-tr="Fiyat" data-en="Price">Fiyat</th>' +
       '</tr></thead><tbody>';
-    item.tableRows.forEach(function(r) {
-      var labelStr = (r.label && r.label.tr) ? r.label.tr : (r.label || '');
-      var subStr   = (r.sub   && r.sub.tr)   ? r.sub.tr   : (r.sub   || '');
-      var subEn    = (r.sub   && r.sub.en)   ? r.sub.en   : '';
-      tHtml += '<tr><td>' + esc(labelStr) +
-        (subStr ? '<span class="pt-sub" data-tr="' + esc(subStr) + '" data-en="' + esc(subEn) + '">' + esc(subStr) + '</span>' : '') +
-        '</td><td>' + esc(r.price) + '</td></tr>';
+    item.table.rows.forEach(function(r) {
+      var qtyStr  = r.qty || '';
+      var subTr   = (r.label && r.label.tr) ? r.label.tr : '';
+      var subEn   = (r.label && r.label.en) ? r.label.en : subTr;
+      tHtml += '<tr><td>' + esc(qtyStr) +
+        (subTr ? '<span class="pt-sub" data-tr="' + esc(subTr) + '" data-en="' + esc(subEn) + '">' + esc(subTr) + '</span>' : '') +
+        '</td><td>' + esc(r.price) + '₺</td></tr>';
     });
     tHtml += '</tbody></table></div>';
     left.innerHTML += tHtml;
@@ -1287,9 +1286,9 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
       (sec.items || []).forEach(function(drink) {
         var dTr  = (drink.label && drink.label.tr) ? drink.label.tr : drink.id;
         var noteStr = drink.note ? drink.note.tr : (drink.price > 0 ? drink.price + '\u20BA' : '\u20BA0');
-        var noteEn  = drink.note ? (drink.note.en || noteStr) : noteStr;
+        var drinkNoteEn = drink.note ? (drink.note.en || noteStr) : noteStr;
         var unitPriceAttrs = drink.note
-          ? ' data-tr="' + esc(drink.note.tr) + '" data-en="' + esc(noteEn) + '"'
+          ? ' data-tr="' + esc(drink.note.tr) + '" data-en="' + esc(drinkNoteEn) + '"'
           : '';
         var dRow = document.createElement('div');
         dRow.className = 'pb-drink-row';
@@ -1351,7 +1350,7 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
 
   /* Özet + butonlar */
   var firstSize = builder.sizes && builder.sizes[0];
-  inner.innerHTML +=
+  inner.insertAdjacentHTML('beforeend',
     '<div class="pb-summary">' +
       '<div class="pb-summary-label">Pizzan\u0131z</div>' +
       '<div class="pb-summary-text" id="pbSummaryText">Pizza sosu, mozzarella</div>' +
@@ -1369,10 +1368,18 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
         '<line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>' +
       '</svg>' +
       'Sipari\u015F Ver' +
-    '</button>';
+    '</button>');
 
   div.appendChild(inner);
   return div;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   YARDIMCI: JSON allergens → makeAllergenNote formatına dönüştür
+───────────────────────────────────────────────────────────────── */
+function allergenAdapter(a) {
+  if (!a) return null;
+  return { bodyTr: (a.text && a.text.tr) || '', bodyEn: (a.text && a.text.en) || '', pills: a.pills || [] };
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -1391,11 +1398,11 @@ function renderRegularCategory(sec, cat) {
     });
 
     /* Bölüm seviyesi allerjen */
-    if (section.allergen) sec.appendChild(makeAllergenNote(section.allergen));
+    if (section.allergens) sec.appendChild(makeAllergenNote(allergenAdapter(section.allergens)));
   });
 
   /* Kategori seviyesi allerjen */
-  if (cat.allergen) sec.appendChild(makeAllergenNote(cat.allergen));
+  if (cat.allergens) sec.appendChild(makeAllergenNote(allergenAdapter(cat.allergens)));
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -1406,7 +1413,7 @@ function renderPizzaCategory(sec, cat) {
   var dl = makeDivider('El A\u00E7mas\u0131 Pizzalar', 'margin-top:36px');
   sec.appendChild(dl);
 
-  (cat.items || []).forEach(function(item) {
+  (cat.presets || []).forEach(function(item) {
     sec.appendChild(makePizzaPresetRow(item));
   });
 
@@ -1485,7 +1492,7 @@ function initAccordion() {
       row.addEventListener('click', function(e) {
         if (e.target.closest('.abox,.allergen-note')) return;
         row.classList.add('no-slide');
-        setTimeout(function() { row.classList.remove('no-slide'); }, 300);
+        setTimeout(function() { row.classList.remove('no-slide'); }, 400);
         var wasOpen = rw.classList.contains('open');
         rw.closest('.sec').querySelectorAll('.rw.open').forEach(function(r) {
           r.classList.remove('open');
@@ -1579,8 +1586,7 @@ function initPizzaBuilder(builderData) {
       r.classList.remove('active');
     });
     builder.querySelectorAll('.pb-size').forEach(function(b) { b.classList.remove('on'); });
-    var defaultSize = builder.querySelector('.pb-size[data-size="' + currentSize.split('')[0] + '"]') ||
-                      builder.querySelector('.pb-size');
+    var defaultSize = builder.querySelector('.pb-size');
     if (defaultSize) {
       defaultSize.classList.add('on');
       currentSize  = defaultSize.getAttribute('data-size');
@@ -1853,24 +1859,12 @@ function renderMenu(data) {
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   FETCH — menu.json'dan veriyi çek ve render et
-   JSON dosyası bu HTML ile aynı dizinde olmalıdır.
+   MENÜ VERİSİ — Inline gömülü, sıfır ağ gecikmesi
 ───────────────────────────────────────────────────────────────── */
-fetch('menu.json')
-  .then(function(r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  })
-  .then(function(data) {
-    renderMenu(data);
-  })
-  .catch(function(err) {
-    console.error('menu.json yüklenemedi:', err);
-    document.getElementById('wrap').innerHTML =
-      '<p style="text-align:center;padding:60px 20px;color:var(--th-muted);font-family:Outfit,sans-serif">' +
-      'Menü yüklenirken bir sorun oluştu.<br>' +
-      '<small style="opacity:.6">menu.json bu dosya ile aynı klasörde olmalıdır.</small></p>';
-  });
+</script>
+<script src="menu.js"></script>
+<script>
+renderMenu(MENU_DATA);
 </script>
 </body>
 </html>
