@@ -48,7 +48,6 @@ body.pizza .nav{background:rgba(42,31,24,.75)}
 .food-sep-line{flex:1;height:1px;background:var(--th-border);transition:background .5s}
 .food-sep-label{font-size:8px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--th-muted);white-space:nowrap;transition:color .5s}
 .nb{font-family:'Outfit',sans-serif;font-weight:500;letter-spacing:1px;text-transform:uppercase;border:none;background:none;border-radius:7px;color:var(--th-muted);cursor:pointer;-webkit-appearance:none;appearance:none;transition:background .25s,color .25s;white-space:nowrap;min-height:44px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;user-select:none;-webkit-user-select:none}
-.nb.on[data-group="main"]{font-weight:600}
 .nb.on[data-group="main"]{background:var(--th-mid);color:var(--th-bg);font-weight:600}
 .nb.on[data-group="pizza"]{
   background:#1A1208;
@@ -781,7 +780,7 @@ var accordionIds = [];
    ÇEVİRİ TABLOSU
 ───────────────────────────────────────────────────────────────── */
 var TRANSLATIONS = {
-  'Kahve':'Coffee','Soğuk':'Cold','Çay':'Tea','Diğer':'Other','Pizza Menüsü':'Pizza Menu',
+  'Kahve':'Coffee','Soğuk':'Cold','Çay':'Tea','Diğer':'Other',
   'Ekstralar':'Extras','İlave Aroma':'Extra Flavor','İlave Süt':'Extra Milk',
   'Filtre Kahveler':'Filter Coffees','Türk Kahvesi & Espresso':'Turkish Coffee & Espresso',
   'Sütlü İçecekler':'Milk Drinks','Sıcak İçecekler':'Hot Drinks','Soğuk Kahveler':'Cold Coffees',
@@ -851,7 +850,7 @@ var TRANSLATIONS = {
   'Sosis':'Frankfurter','Mantar':'Mushroom','Siyah Zeytin':'Black Olive','Yeşil Zeytin':'Green Olive',
   'Mısır':'Corn','Karamelize Soğan':'Caramelized Onion','Domates':'Tomato','Biber':'Pepper',
   'Şalgam Acılı':'Spicy Turnip Juice','Şalgam Acısız':'Mild Turnip Juice','Kola':'Cola','Limonata':'Lemonade','Çay':'Tea','İkram':'Complimentary',
-  'Pizzanız':'Your Pizza','Pizza sosu, mozzarella':'Pizza sauce, mozzarella',
+  'Pizzanız':'Your Pizza','Pizza sosu, mozzarella':'Pizza sauce, mozzarella','Gönderiliyor...':'Sending...',
   'Sıfırla':'Reset','Sipariş Ver':'Order Now',
   'daha fazla bilgi için ürüne dokun':'tap item for more info',
   'S · Küçük':'S · Small','M · Orta':'M · Medium','L · Büyük':'L · Large',
@@ -946,6 +945,20 @@ function applyLang(lang) {
   });
   document.querySelectorAll('.pt-sub[data-tr]').forEach(function(el) {
     el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-tr');
+  });
+
+  /* Pizza builder içecek notu (.pnote) */
+  document.querySelectorAll('.pnote[data-tr]').forEach(function(el) {
+    var t = el.getAttribute('data-tr');
+    var e = el.getAttribute('data-en');
+    /* EN çevirisi yoksa notu gizle, TR'de göster */
+    if (lang === 'en') {
+      el.style.display = e ? '' : 'none';
+      if (e) el.textContent = e;
+    } else {
+      el.style.display = '';
+      el.textContent = t;
+    }
   });
 
   var bld = document.getElementById('pizzaBuilder');
@@ -1316,6 +1329,8 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
         var pnote = document.createElement('div');
         pnote.className = 'pnote';
         pnote.style.cssText = 'margin-top:10px;padding:8px 14px;font-size:11px;';
+        pnote.setAttribute('data-tr', noteTr);
+        pnote.setAttribute('data-en', noteEn || '');
         pnote.textContent = noteTr;
         secDiv.appendChild(pnote);
       }
@@ -1484,6 +1499,7 @@ function initAccordion() {
           '<p class="rinfo-text">' + infoDisplay + '</p>' +
         '</div></div>';
       rw.appendChild(ri);
+      void ri.offsetHeight; /* tarayıcıyı 0fr başlangıç durumunu kaydetmeye zorla */
 
       row.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); row.click(); }
@@ -1508,7 +1524,7 @@ function initAccordion() {
             if (rect.bottom > vph - 24) {
               window.scrollBy({top: rect.bottom - vph + 48, behavior: 'smooth'});
             }
-          }, 280);
+          }, 380);
         }
       }, {passive: true});
 
@@ -1529,6 +1545,7 @@ function initPizzaBuilder(builderData) {
   var orderBtn    = document.getElementById('pbOrderBtn');
   var NTFY_KANAL  = 'pizza-siparisler-benapizza';
   if (!builder) return;
+  var orderBtnOrigHTML = orderBtn.innerHTML; /* SVG + metin kaybolmasın */
 
   /* sizeLabels JSON'dan üret */
   var sizeLabels = {};
@@ -1617,33 +1634,31 @@ function initPizzaBuilder(builderData) {
       (drinkPartsO.length ? '\nİçecek: ' + drinkPartsO.join(', ') : '') +
       '\nFiyat: ' + totalPriceO + ' TL';
     orderBtn.disabled = true;
-    orderBtn.textContent = 'Gönderiliyor...';
+    orderBtn.innerHTML = 'Gönderiliyor...';
     fetch('https://ntfy.sh/' + NTFY_KANAL, {
       method: 'POST',
       headers: {'Title': baslik, 'Priority': '4', 'Tags': 'pizza', 'Content-Type': 'text/plain; charset=utf-8'},
       body: icerik
     }).then(function(res) {
       if (res.ok) {
-        orderBtn.textContent = '\u2713 Sipariş Alındı!';
+        orderBtn.innerHTML = '\u2713 Sipariş Alındı!';
         orderBtn.style.background = '#2A7A3A';
       } else {
-        orderBtn.textContent = 'Hata — Tekrar dene';
+        orderBtn.innerHTML = 'Hata — Tekrar dene';
         orderBtn.style.background = '#8A3A2A';
         orderBtn.disabled = false;
       }
       setTimeout(function() {
-        var oo = orderBtn._tr || (orderBtn._tr = 'Sipariş Ver');
-        orderBtn.textContent = currentLang === 'en' ? (TRANSLATIONS[oo] || oo) : oo;
+        orderBtn.innerHTML = currentLang === 'en' ? orderBtnOrigHTML.replace('Sipariş Ver', 'Order Now') : orderBtnOrigHTML;
         orderBtn.style.background = '';
         orderBtn.disabled = false;
       }, 3000);
     }).catch(function() {
-      orderBtn.textContent = 'Bağlantı hatası — Tekrar dene';
+      orderBtn.innerHTML = 'Bağlantı hatası — Tekrar dene';
       orderBtn.style.background = '#8A3A2A';
       orderBtn.disabled = false;
       setTimeout(function() {
-        var oo = orderBtn._tr || (orderBtn._tr = 'Sipariş Ver');
-        orderBtn.textContent = currentLang === 'en' ? (TRANSLATIONS[oo] || oo) : oo;
+        orderBtn.innerHTML = currentLang === 'en' ? orderBtnOrigHTML.replace('Sipariş Ver', 'Order Now') : orderBtnOrigHTML;
         orderBtn.style.background = '';
       }, 3000);
     });
@@ -1848,14 +1863,16 @@ function renderMenu(data) {
   var firstId = data.categories[0] ? data.categories[0].id : 'coffee';
   go(firstId);
 
-  /* 7. Akordeon başlat */
-  initAccordion();
-
-  /* 8. Pizza builder başlat */
-  if (pizzaCat && pizzaCat.builder) {
-    initPizzaBuilder(pizzaCat.builder);
-    initPizzaPresets();
-  }
+  /* 7-8. Tarayıcı DOM'u bir kere paint ettikten sonra başlat.
+     Bu olmadan rinfo elementleri 0fr initial state'i kaydetmez,
+     ilk tıklamada animasyon yerine snap olur. */
+  requestAnimationFrame(function() {
+    initAccordion();
+    if (pizzaCat && pizzaCat.builder) {
+      initPizzaBuilder(pizzaCat.builder);
+      initPizzaPresets();
+    }
+  });
 }
 
 /* ─────────────────────────────────────────────────────────────────
