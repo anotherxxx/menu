@@ -778,7 +778,7 @@ body.pizza .lang-btn:hover{background:#2A1F18;border-color:var(--pizza-gold);col
   </div>
   <div class="food-sep">
     <div class="food-sep-line"></div>
-    <span class="food-sep-label">Yemek</span>
+    <span class="food-sep-label" data-tr="Yemek" data-en="Food">Yemek</span>
     <div class="food-sep-line"></div>
   </div>
   <div class="nav-row">
@@ -830,97 +830,24 @@ var cfgEn = {};
 var accordionIds = [];
 
 /* ─────────────────────────────────────────────────────────────────
-   ÇEVİRİ TABLOSU
+   YARDIMCI: DİL BİRLEŞTİRME
+   Object.assign'in boş string ile geçerli değerleri ezmesini önler
 ───────────────────────────────────────────────────────────────── */
-var TRANSLATIONS = {
-  'Kahve':'Coffee','Soğuk':'Cold','Çay':'Tea','Diğer':'Other',
-  'Ekstralar':'Extras','İlave Aroma':'Extra Flavor','İlave Süt':'Extra Milk',
-  'Filtre Kahveler':'Filter Coffees','Türk Kahvesi & Espresso':'Turkish Coffee & Espresso',
-  'Sütlü İçecekler':'Milk Drinks','Sıcak İçecekler':'Hot Drinks','Soğuk Kahveler':'Cold Coffees',
-  'Smoothieler':'Smoothies','Siyah Çay':'Black Tea','Bitki & Meyve Çayları':'Herbal & Fruit Teas',
-  'Kestane Şekeri Çeşitleri':'Candied Chestnut Varieties','Tatlılar & Kurabiye':'Sweets & Cookies',
-  'El Açması Pizzalar':'Hand-Stretched Pizzas','Kendi Pizzanı Oluştur':'Build Your Own Pizza',
-  'Filtre Kahve':'Filter Coffee','Türk Kahvesi':'Turkish Coffee',
-  'Karamel Macchiato':'Caramel Macchiato','Aromalı Latte':'Flavored Latte',
-  'Sıcak Çikolata':'Hot Chocolate','Sıcak Beyaz Çikolata':'Hot White Chocolate',
-  'Çikolatalı Sahlep':'Chocolate Sahlep','Damla Sakızlı Sahlep':'Mastic Sahlep',
-  'Iced Karamel Macchiato':'Iced Caramel Macchiato','Iced Aromalı Latte':'Iced Flavored Latte',
-  'Kırmızı Orman Meyveli Çay':'Red Berry Tea','Yeşil Çay':'Green Tea',
-  'Ihlamur Çiçek Çayı':'Linden Flower Tea','Nane Limon Çayı':'Mint Lemon Tea',
-  'Papatya Çayı':'Chamomile Tea','Form Çayı':'Wellness Tea','Ada Çayı':'Sage Tea',
-  'Popüler':'Popular','Öne Çıkan':'Featured','Vejetaryen':'Vegetarian',
-  'Rezene, kuşburnu & yeşil çay karışımı':'Fennel, rosehip & green tea blend',
-  'Pizza Menüsü':'Pizza Menu','El açması · Taze malzeme':'Hand-stretched · Fresh ingredients',
-  'Kestane Şekeri':'Candied Chestnuts','Leblebi Kurabiyesi':'Chickpea Cookie','Met Helvası':'Met Halva',
-  'Karışık Pizza':'Mixed Pizza','Sucuklu Pizza':'Sucuk Pizza',
-  'Çiftlik Evi':'Farmhouse','Sebzeli Pizza':'Veggie Pizza',
-  'Yumuşak içim, dengeli aroma':'Smooth, balanced aroma',
-  'El demleme, tercih ettiğiniz aromayla hazırlanır':'Hand brewed with your choice of flavor',
-  'Geleneksel lezzet':'Traditional taste','Kısa ve yoğun':'Short and intense',
-  'Espresso ve sıcak su, uzun ve güçlü':'Espresso with hot water, long and strong',
-  'Yumuşak ve sütlü':'Smooth and milky','Köpüklü ve dengeli':'Frothy and balanced',
-  'Espresso ve eşit miktarda süt, yoğun ve dengeli':'Espresso with equal parts milk, rich and balanced',
-  'Yoğun ve ipeksi':'Rich and silky','Kahve & çikolata harmanı':'Coffee & chocolate blend',
-  'Beyaz çikolata & espresso, kremamsı ve tatlı':'White chocolate & espresso, creamy and sweet',
-  'Süt, espresso ve karamel sos':'Milk, espresso and caramel sauce',
-  'Tercih ettiğiniz aromayı seçin':'Choose your flavor',
-  'Kadifemsi ve yoğun':'Velvety and rich','Tatlı ve kremamsı':'Sweet and creamy',
-  'Baharatlı çay & sıcak sütlü':'Spiced tea & steamed milk',
-  'Geleneksel kış içeceği, tarçınlı':'Traditional winter drink with cinnamon',
-  'Sahlep & çikolata harmanı':'Sahlep & chocolate blend','Sahlep & damla sakızı aroması':'Sahlep & mastic flavor',
-  'Buzlu, ferahlatıcı uzun içim':'Iced, refreshing long drink','Buzlu süt üzerine espresso':'Espresso over iced milk',
-  'Buzlu, yoğun ve ipeksi':'Iced, rich and silky','Buzlu kahve & çikolata harmanı':'Iced coffee & chocolate blend',
-  'Buzlu beyaz çikolata & espresso':'Iced white chocolate & espresso',
-  'Buzlu süt, espresso ve karamel sos':'Iced milk, espresso and caramel sauce',
-  'Buzlu, tercih ettiğiniz aromayı seçin':'Iced, choose your flavor',
-  'Taze hazırlanan mevsim smoothieleri':'Freshly prepared seasonal smoothies',
-  'Klasik demleme çay':'Classic brewed tea',
-  'Böğürtlen, kuşburnu ve orman meyveleri':'Blackberry, rosehip and forest fruits',
-  'Hafif ve antioksidan açısından zengin':'Light and rich in antioxidants',
-  'Kafeinsiz, vanilya aromalı ve kadifemsi':'Caffeine-free, vanilla-flavored and velvety',
-  'Rahatlatıcı ve doğal':'Soothing and natural','Ferahlatıcı ve canlandırıcı':'Refreshing and invigorating',
-  'Sakinleştirici ve hafif tatlı':'Calming and mildly sweet','Özel bitki karışımı':'Special herbal blend',
-  'Geleneksel Ege aromatik çayı':'Traditional Aegean aromatic tea',
-  'Özel çeşitler, hediye seçenekleri ile':'Special varieties with gift options',
-  'Leblebi tozundan üretilen lezzetli bir kurabiye':'Delicious cookie made from chickpea flour',
-  'Eskişehire özgü lezzet':'A flavor unique to Eskisehir',
-  'Pizza sosu, mozzarella, salam, sucuk, sosis, mantar, siyah & yeşil zeytin, mısır':'Pizza sauce, mozzarella, salami, sausage, frankfurter, mushroom, black & green olive, corn',
-  'Pizza sosu, mozzarella, %100 dana sucuk':'Pizza sauce, mozzarella, 100% beef sausage',
-  'Pizza sosu, mozzarella, salam, mantar':'Pizza sauce, mozzarella, salami, mushroom',
-  'Pizza sosu, mozzarella — klasik sadelik':'Pizza sauce, mozzarella — classic simplicity',
-  'Pizza sosu, mozzarella, mantar, karamelize soğan, siyah & yeşil zeytin, mısır, domates':'Pizza sauce, mozzarella, mushroom, caramelized onion, black & green olive, corn, tomato',
-  'Çekirdek Seçenekleri':'Bean Options','Aromalar':'Flavors','Paket Seçenekleri':'Package Options',
-  'Fındık':'Hazelnut','Karamel':'Caramel','Çikolata':'Chocolate','Beyaz Çikolata':'White Chocolate',
-  'Çilek':'Strawberry','Kurabiye':'Cookie','Vanilya':'Vanilla','Nane':'Mint',
-  'Böğürtlen':'Blackberry','Mango':'Mango','Kırmızı Orman Meyvesi':'Red Forest Berry',
-  'Muz':'Banana','Kavun':'Melon','Şeftali':'Peach',
-  'Standart':'Standard','Cam · S · M · L':'Glass · S · M · L',
-  'Miktar':'Amount','Fiyat':'Price','küçük boy':'small','orta boy':'medium','büyük boy':'large','dörtlü paket':'four pack',
-  'Boyut':'Size','Sos':'Sauce','Peynir':'Cheese','Et & Şarküteri':'Meat & Charcuterie',
-  'Sebze':'Vegetables','İçecek':'Drinks','(opsiyonel)':'(optional)',
-  'Küçük':'Small','Orta':'Medium','Büyük':'Large',
-  'Pizza Sosu':'Pizza Sauce','Salam':'Salami','%100 Dana Sucuk':'100% Beef Sausage',
-  'Sosis':'Frankfurter','Mantar':'Mushroom','Siyah Zeytin':'Black Olive','Yeşil Zeytin':'Green Olive',
-  'Mısır':'Corn','Karamelize Soğan':'Caramelized Onion','Domates':'Tomato','Biber':'Pepper',
-  'Şalgam Acılı':'Spicy Turnip Juice','Şalgam Acısız':'Mild Turnip Juice','Kola':'Cola','Limonata':'Lemonade','Çay':'Tea','İkram':'Complimentary',
-  'Pizzanız':'Your Pizza','Pizza sosu, mozzarella':'Pizza sauce, mozzarella','Gönderiliyor...':'Sending...',
-  'Sıfırla':'Reset','Sipariş Ver':'Order Now',
-  'daha fazla bilgi için ürüne dokun':'tap item for more info',
-  'S · Küçük':'S · Small','M · Orta':'M · Medium','L · Büyük':'L · Large',
-  'Süt / Laktoz':'Milk / Lactose','Fruktoz':'Fructose',
-  'Glutensiz':'Gluten-free','Gluten':'Gluten','Kakao':'Cocoa',
-  'Kafeinsiz (Rooibos)':'Caffeine-free (Rooibos)','Kafein (Siyah & Yeşil)':'Caffeine (Black & Green)',
-  'Yemek':'Food',
-  'Özel boyut ve toplu sipariş için lütfen personelimizle iletişime geçin.':'For custom sizes and bulk orders, please contact our staff.'
-};
+function mergeLang(base, override) {
+  var result = Object.assign({}, base);
+  Object.keys(override).forEach(function(k) {
+    var v = override[k];
+    if (v !== undefined && v !== null && v !== '') result[k] = v;
+  });
+  return result;
+}
 
 /* ─────────────────────────────────────────────────────────────────
-   DİL UYGULAMA
+   DİL UYGULAMA — TRANSLATIONS tablosu yerine data-tr/data-en
 ───────────────────────────────────────────────────────────────── */
 function applyLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
-  go(currentTab);
 
   var lb = document.getElementById('langToggle');
   var ll = document.getElementById('langLabel');
@@ -929,110 +856,32 @@ function applyLang(lang) {
     ll.textContent = lang === 'en' ? 'TR' : 'EN';
   }
 
-  function tEl(el) {
-    var orig = el._tr || (el._tr = el.textContent.trim());
-    if (!orig) return;
-    el.textContent = lang === 'en' ? (TRANSLATIONS[orig] || orig) : orig;
-  }
-
-  function tFirst(el) {
-    var n = el.firstChild;
-    while (n && n.nodeType !== 3) n = n.nextSibling;
-    if (!n) return;
-    var raw = n._tr || (n._tr = n.textContent);
-    var key = raw.trim();
-    if (!key) return;
-    if (lang === 'en') {
-      var en = TRANSLATIONS[key];
-      n.textContent = en ? raw.replace(key, en) : raw;
-    } else {
-      n.textContent = raw;
-    }
-  }
-
-  ['.nb','.dl-text','.food-sep-label','.rname','.rdesc','.item-badge',
-   '.alabel','.atag','.extras-label',
-   '.tap-hint-text','.pb-drink-name','.pb-size span',
-   '.pb-summary-label','.pizza-order-shortcut','.pb-sec-optional','.ps'
-  ].forEach(function(sel) {
-    document.querySelectorAll(sel).forEach(tEl);
+  /* data-tr attribute'u olan tüm düz metin elementleri (çocuk elementi olanlar atlanır) */
+  document.querySelectorAll('[data-tr]:not(.allergen-body)').forEach(function(el) {
+    if (el.children.length > 0) return; /* çocuk elementi olan container atlanır */
+    var val = lang === 'en'
+      ? (el.getAttribute('data-en') || el.getAttribute('data-tr'))
+      : el.getAttribute('data-tr');
+    el.textContent = val;
   });
 
-  document.querySelectorAll('.pb-sec-label').forEach(tFirst);
-  document.querySelectorAll('.pb-tag[data-ing]').forEach(tFirst);
-  document.querySelectorAll('.extra-pill').forEach(tFirst);
-
-  var rb = document.getElementById('pbReset');
-  if (rb) { var ro = rb._tr || (rb._tr = 'Sıfırla'); rb.textContent = lang === 'en' ? (TRANSLATIONS[ro] || ro) : ro; }
-  var ob = document.getElementById('pbOrderBtn');
-  if (ob && !ob.disabled) {
-    var oo = ob._tr || (ob._tr = 'Sipariş Ver');
-    ob.textContent = lang === 'en' ? (TRANSLATIONS[oo] || oo) : oo;
-  }
-
-  document.querySelectorAll('.rinfo-text').forEach(function(p) {
-    var row = p.closest('.rw');
-    if (!row) return;
-    var rowEl = row.querySelector('.row[data-info]') || row.previousElementSibling;
-    if (!rowEl) return;
-    var infoTr = rowEl.getAttribute('data-info');
-    var infoEn = rowEl.getAttribute('data-info-en');
-    if (lang === 'en' && infoEn) p.textContent = infoEn;
-    else if (lang === 'tr' && infoTr) p.textContent = infoTr;
-  });
-
+  /* allergen-body: HTML içerik (strong tag'leri var) */
   document.querySelectorAll('.allergen-body[data-tr]').forEach(function(el) {
-    el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-tr');
+    el.innerHTML = lang === 'en'
+      ? (el.getAttribute('data-en') || el.getAttribute('data-tr'))
+      : el.getAttribute('data-tr');
   });
 
-  document.querySelectorAll('.a-pill[data-tr]').forEach(function(el) {
-    el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-tr');
-  });
+  /* Hero / footer metinleri go() ile güncellenir — akordeonlar açık kalır */
+  go(currentTab, {closeAccordions: false});
 
-  document.querySelectorAll('.pb-drink-unit-price[data-tr]').forEach(function(el) {
-    el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-tr');
-  });
-
-  document.querySelectorAll('th[data-tr], th[data-en]').forEach(function(el) {
-    el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-tr');
-  });
-  document.querySelectorAll('.pt-sub[data-tr]').forEach(function(el) {
-    el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-tr');
-  });
-
-  /* Pizza builder içecek notu (.pnote) */
-  document.querySelectorAll('.pnote[data-tr]').forEach(function(el) {
-    var t = el.getAttribute('data-tr');
-    var e = el.getAttribute('data-en');
-    /* EN çevirisi yoksa notu gizle, TR'de göster */
-    if (lang === 'en') {
-      el.style.display = e ? '' : 'none';
-      if (e) el.textContent = e;
-    } else {
-      el.style.display = '';
-      el.textContent = t;
-    }
-  });
-
+  /* Pizza builder özetini yenile */
   var bld = document.getElementById('pizzaBuilder');
   if (bld) bld.dispatchEvent(new Event('lang-changed'));
-
-  var ctaTitle = document.getElementById('pizzaCTATitle');
-  var ctaSub   = document.getElementById('pizzaCTASub');
-  if (ctaTitle) {
-    var tit = cfg.pizza;
-    if (lang === 'en' && cfgEn.pizza) ctaTitle.innerHTML = cfgEn.pizza.ctaTitle || ctaTitle.innerHTML;
-    else if (tit && tit.ctaTitle) ctaTitle.innerHTML = tit.ctaTitle;
-  }
-  if (ctaSub) {
-    var subc = cfg.pizza;
-    if (lang === 'en' && cfgEn.pizza) ctaSub.textContent = cfgEn.pizza.ctaSub || ctaSub.textContent;
-    else if (subc && subc.ctaSub) ctaSub.textContent = subc.ctaSub;
-  }
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   DİL TOGGLE
+   DİL TOGGLE DİNLEYİCİSİ
 ───────────────────────────────────────────────────────────────── */
 (function() {
   var lb = document.getElementById('langToggle');
@@ -1042,23 +891,22 @@ function applyLang(lang) {
     if (_busy) return;
     _busy = true;
     var body = document.body;
-    body.classList.add('lang-transitioning');
+    body.classList.add('lang-fade');
     setTimeout(function() {
       applyLang(currentLang === 'tr' ? 'en' : 'tr');
-      body.classList.remove('lang-transitioning');
-      body.classList.add('lang-transition-in');
       setTimeout(function() {
-        body.classList.remove('lang-transition-in');
+        body.classList.remove('lang-fade');
         _busy = false;
-      }, 420);
-    }, 200);
-  }, {passive: true});
+      }, 200);
+    }, 180);
+  });
 })();
 
 /* ─────────────────────────────────────────────────────────────────
    SEKME GEÇİŞİ
 ───────────────────────────────────────────────────────────────── */
-function go(tab) {
+function go(tab, opts) {
+  var shouldCloseAccordions = !opts || opts.closeAccordions !== false;
   currentTab = tab;
   document.querySelectorAll('.sec').forEach(function(e) { e.classList.remove('on'); });
   document.querySelectorAll('.nb').forEach(function(e) { e.classList.remove('on'); });
@@ -1072,69 +920,78 @@ function go(tab) {
 
   var _cfg   = cfg[tab]   || {};
   var _cfgEn = cfgEn[tab] || {};
-  var _c = currentLang === 'en' ? Object.assign({}, _cfg, _cfgEn) : _cfg;
+  var _c = currentLang === 'en' ? mergeLang(_cfg, _cfgEn) : _cfg;
 
-  var _langCls = Array.from(document.body.classList).filter(function(x) { return x.indexOf('lang-') === 0; });
-  document.body.className = (_c.cls ? _c.cls + ' ' : '') + _langCls.join(' ');
+  document.body.classList.remove('lang-tr');
+  document.body.classList.remove('lang-en');
+  document.body.classList.add('lang-' + currentLang);
+  ['ice','tea','shop','pizza'].forEach(function(c) { document.body.classList.remove(c); });
+  if (_c.cls) document.body.classList.add(_c.cls);
 
   var eyebrow = document.getElementById('eyebrow');
   var htitle  = document.getElementById('htitle');
   var hsub    = document.getElementById('hsub');
   var footTxt = document.getElementById('foot-text');
   var extWrap = document.getElementById('extras-wrap');
-
-  if (eyebrow) eyebrow.textContent = _c.ey || '';
-  if (htitle)  htitle.innerHTML    = _c.t  || '';
-  if (hsub)    hsub.innerHTML      = _c.sub || '';
+  if (eyebrow) eyebrow.textContent = _c.ey  || '';
+  if (htitle)  htitle.innerHTML    = _c.t   || '';
+  if (hsub)    hsub.textContent    = _c.sub || '';
   if (footTxt) footTxt.textContent = _c.foot || '';
   if (extWrap) extWrap.style.display = _c.ext ? '' : 'none';
 
-  document.querySelectorAll('.rw.open').forEach(function(r) {
-    r.classList.remove('open');
-    var rBtn = r.querySelector('[role="button"]');
-    if (rBtn) rBtn.setAttribute('aria-expanded', 'false');
-  });
+  /* Açık akordeonları kapat (sadece sekme değişiminde) */
+  if (shouldCloseAccordions) {
+    document.querySelectorAll('.rw.open').forEach(function(r) {
+      r.classList.remove('open');
+      var rBtn = r.querySelector('[role="button"]');
+      if (rBtn) rBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
 
   var cta = document.getElementById('pizzaCTA');
-  if (cta) cta.classList.toggle('pizza-active', tab === 'pizza');
+  if (cta) {
+    var ctaTitle = document.getElementById('pizzaCTATitle');
+    var ctaSub   = document.getElementById('pizzaCTASub');
+    if (ctaTitle) ctaTitle.innerHTML  = _c.ctaTitle || '';
+    if (ctaSub)   ctaSub.textContent  = _c.ctaSub   || '';
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   YARDIMCI: KCAL METNİ FORMATLA
-   JSON'da "(14 oz)" varyantı için "kcal" doğru yere eklenir.
+   YARDIMCI FONKSİYONLAR
 ───────────────────────────────────────────────────────────────── */
 function formatKcal(raw) {
   if (!raw) return '';
-  if (raw.indexOf('kcal') >= 0) return raw;          /* zaten var */
-  if (raw.indexOf('(') >= 0) return raw.replace('(', 'kcal ('); /* "≈7 (14 oz)" → "≈7 kcal (14 oz)" */
+  if (raw.indexOf('kcal') >= 0) return raw;
   return raw + ' kcal';
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   YARDIMCI: HTML KARAKTER KAÇIŞI
-───────────────────────────────────────────────────────────────── */
 function esc(s) {
+  if (s === null || s === undefined) return '';
   return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   RENDER: BÖLÜM AYRAÇ (DIVIDER)
+   RENDER: BÖLÜM AYRAÇ
 ───────────────────────────────────────────────────────────────── */
-function makeDivider(titleTr, extraStyle) {
+function makeDivider(titleTr, titleEn, extraStyle) {
   var dl = document.createElement('div');
   dl.className = 'dl';
   if (extraStyle) dl.style.cssText = extraStyle;
   dl.innerHTML =
-    '<div class="dl-inner"><div class="dl-gem"></div>' +
-    '<span class="dl-text">' + esc(titleTr) + '</span>' +
-    '<div class="dl-gem"></div></div>';
+    '<div class="dl-line"></div>' +
+    '<span class="dl-text" data-tr="' + esc(titleTr) + '" data-en="' + esc(titleEn || titleTr) + '">' + esc(titleTr) + '</span>' +
+    '<div class="dl-line"></div>';
   return dl;
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   RENDER: STANDART MENÜ SATIRLARI
+   RENDER: NORMAL ÜRÜN SATIRI
 ───────────────────────────────────────────────────────────────── */
 function makeItemRow(item) {
   var row = document.createElement('div');
@@ -1148,22 +1005,26 @@ function makeItemRow(item) {
   var left = document.createElement('div');
   left.className = 'row-left';
 
-  /* İsim (rozet varsa sarmalayıcı) */
+  /* İsim */
   var nameTr = (item.name && item.name.tr) ? item.name.tr : (item.name || '');
+  var nameEn = (item.name && item.name.en) ? item.name.en : nameTr;
+  var badgeMap = { popular: ['Popüler','Popular'], featured: ['Öne Çıkan','Featured'], veggie: ['Vejetaryen','Vegetarian'] };
+
   if (item.badge) {
-    var badgeMap = {popular:'Popüler', featured:'Öne Çıkan', veggie:'Vejetaryen'};
+    var bArr = badgeMap[item.badge] || [item.badge, item.badge];
     left.innerHTML +=
       '<div class="rname-wrap">' +
-        '<div class="rname">' + esc(nameTr) + '</div>' +
-        '<span class="item-badge ' + esc(item.badge) + '">' + esc(badgeMap[item.badge] || item.badge) + '</span>' +
+        '<div class="rname" data-tr="' + esc(nameTr) + '" data-en="' + esc(nameEn) + '">' + esc(nameTr) + '</div>' +
+        '<span class="item-badge ' + esc(item.badge) + '" data-tr="' + esc(bArr[0]) + '" data-en="' + esc(bArr[1]) + '">' + esc(bArr[0]) + '</span>' +
       '</div>';
   } else {
-    left.innerHTML += '<div class="rname">' + esc(nameTr) + '</div>';
+    left.innerHTML += '<div class="rname" data-tr="' + esc(nameTr) + '" data-en="' + esc(nameEn) + '">' + esc(nameTr) + '</div>';
   }
 
   /* Açıklama */
   var descTr = (item.desc && item.desc.tr) ? item.desc.tr : (item.desc || '');
-  left.innerHTML += '<div class="rdesc">' + esc(descTr) + '</div>';
+  var descEn = (item.desc && item.desc.en) ? item.desc.en : descTr;
+  left.innerHTML += '<div class="rdesc" data-tr="' + esc(descTr) + '" data-en="' + esc(descEn) + '">' + esc(descTr) + '</div>';
 
   /* Kalori */
   if (item.kcal) {
@@ -1175,30 +1036,34 @@ function makeItemRow(item) {
   /* Aroma/çekirdek kutusu */
   if (item.tags) {
     var labelTr = (item.tags.label && item.tags.label.tr) ? item.tags.label.tr : (item.tags.label || '');
+    var labelEn = (item.tags.label && item.tags.label.en) ? item.tags.label.en : labelTr;
     var tagItems = item.tags.items || [];
     var tagsHtml = tagItems.map(function(t) {
       var tTr = t.tr || t;
-      return '<span class="atag">' + esc(tTr) + '</span>';
+      var tEn = t.en || tTr;
+      return '<span class="atag" data-tr="' + esc(tTr) + '" data-en="' + esc(tEn) + '">' + esc(tTr) + '</span>';
     }).join('');
     left.innerHTML +=
       '<div class="abox">' +
-        '<span class="alabel">' + esc(labelTr) + '</span>' +
+        '<span class="alabel" data-tr="' + esc(labelTr) + '" data-en="' + esc(labelEn) + '">' + esc(labelTr) + '</span>' +
         '<div class="atags">' + tagsHtml + '</div>' +
       '</div>';
   }
 
-  /* Özel tablo (product-table) — "table" alanı varsa */
+  /* Özel tablo (product-table) */
   if (item.table && item.table.rows) {
+    var tlTr = (item.table.label && item.table.label.tr) || '';
+    var tlEn = (item.table.label && item.table.label.en) || tlTr;
     var tHtml = '<div class="abox" style="margin-top:10px">' +
-      '<span class="alabel" style="color:var(--shop-accent)">' + esc((item.table.label && item.table.label.tr) || '') + '</span>' +
+      '<span class="alabel" style="color:var(--shop-accent)" data-tr="' + esc(tlTr) + '" data-en="' + esc(tlEn) + '">' + esc(tlTr) + '</span>' +
       '<table class="product-table"><thead><tr>' +
       '<th data-tr="Miktar" data-en="Amount">Miktar</th>' +
       '<th style="text-align:right" data-tr="Fiyat" data-en="Price">Fiyat</th>' +
       '</tr></thead><tbody>';
     item.table.rows.forEach(function(r) {
-      var qtyStr  = r.qty || '';
-      var subTr   = (r.label && r.label.tr) ? r.label.tr : '';
-      var subEn   = (r.label && r.label.en) ? r.label.en : subTr;
+      var qtyStr = r.qty || '';
+      var subTr  = (r.label && r.label.tr) ? r.label.tr : '';
+      var subEn  = (r.label && r.label.en) ? r.label.en : subTr;
       tHtml += '<tr><td>' + esc(qtyStr) +
         (subTr ? '<span class="pt-sub" data-tr="' + esc(subTr) + '" data-en="' + esc(subEn) + '">' + esc(subTr) + '</span>' : '') +
         '</td><td>' + esc(r.price) + '₺</td></tr>';
@@ -1214,21 +1079,11 @@ function makeItemRow(item) {
   var prices = item.prices || [];
   var pb = document.createElement('div');
   pb.className = 'pb';
-
-  /* Özel ps metni (tableRows varsa özel fiyat göstergesi) */
-  var psText = item.psLabel
-    ? item.psLabel
-    : sizes.join(' · ');
-
-  /* Özel pv metni */
-  var pvText = item.pvLabel
-    ? item.pvLabel
-    : prices.join(' · ') + '\u20BA';  /* ₺ */
-
+  var psText = item.psLabel ? item.psLabel : sizes.join(' · ');
+  var pvText = item.pvLabel ? item.pvLabel : prices.join(' · ') + '\u20BA';
   pb.innerHTML =
     '<span class="ps">' + esc(psText) + '</span>' +
     '<span class="pv">' + esc(pvText) + '</span>';
-
   row.appendChild(pb);
   return row;
 }
@@ -1237,7 +1092,6 @@ function makeItemRow(item) {
    RENDER: ALLERJEN NOTU
 ───────────────────────────────────────────────────────────────── */
 function makeAllergenNote(allergen, customStyle) {
-  /* allergen: { bodyTr, bodyEn, pills: [{tr, en}], borderColor } */
   if (!allergen) return null;
   var note = document.createElement('div');
   note.className = 'allergen-note';
@@ -1271,25 +1125,32 @@ function makePizzaPresetRow(item) {
   if (item.preset) row.setAttribute('data-preset', item.preset);
 
   var nameTr = (item.name && item.name.tr) ? item.name.tr : (item.name || '');
+  var nameEn = (item.name && item.name.en) ? item.name.en : nameTr;
   var descTr = (item.desc && item.desc.tr) ? item.desc.tr : (item.desc || '');
-  var badgeMap = {popular:'Popüler', featured:'Öne Çıkan', veggie:'Vejetaryen'};
+  var descEn = (item.desc && item.desc.en) ? item.desc.en : descTr;
+  var badgeMap = { popular: ['Popüler','Popular'], featured: ['Öne Çıkan','Featured'], veggie: ['Vejetaryen','Vegetarian'] };
 
   var nameHtml = item.badge
-    ? '<div class="rname-wrap"><div class="rname">' + esc(nameTr) + '</div>' +
-      '<span class="item-badge ' + esc(item.badge) + '">' + esc(badgeMap[item.badge] || item.badge) + '</span></div>'
-    : '<div class="rname">' + esc(nameTr) + '</div>';
+    ? (function() {
+        var bArr = badgeMap[item.badge] || [item.badge, item.badge];
+        return '<div class="rname-wrap">' +
+          '<div class="rname" data-tr="' + esc(nameTr) + '" data-en="' + esc(nameEn) + '">' + esc(nameTr) + '</div>' +
+          '<span class="item-badge ' + esc(item.badge) + '" data-tr="' + esc(bArr[0]) + '" data-en="' + esc(bArr[1]) + '">' + esc(bArr[0]) + '</span>' +
+        '</div>';
+      })()
+    : '<div class="rname" data-tr="' + esc(nameTr) + '" data-en="' + esc(nameEn) + '">' + esc(nameTr) + '</div>';
 
   var sizes  = item.sizes  || [];
   var prices = item.prices || [];
 
   row.innerHTML =
     '<div class="row-left">' + nameHtml +
-      '<div class="rdesc">' + esc(descTr) + '</div>' +
+      '<div class="rdesc" data-tr="' + esc(descTr) + '" data-en="' + esc(descEn) + '">' + esc(descTr) + '</div>' +
     '</div>' +
     '<div class="pb">' +
       '<span class="ps">' + esc(sizes.join(' · ')) + '</span>' +
       '<span class="pv">' + esc(prices.join(' · ')) + '&#8378;</span>' +
-      '<button class="pizza-order-shortcut">Sipariş Ver</button>' +
+      '<button class="pizza-order-shortcut" data-tr="Sipariş Ver" data-en="Order Now">Sipariş Ver</button>' +
     '</div>';
   return row;
 }
@@ -1310,18 +1171,21 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
   sizeSection.className = 'pb-section';
   var sizeLabelEl = document.createElement('div');
   sizeLabelEl.className = 'pb-sec-label';
+  sizeLabelEl.setAttribute('data-tr', 'Boyut');
+  sizeLabelEl.setAttribute('data-en', 'Size');
   sizeLabelEl.textContent = 'Boyut';
   var sizeRow = document.createElement('div');
   sizeRow.className = 'pb-size-row';
 
   (builder.sizes || []).forEach(function(sz, idx) {
     var labelTr = (sz.label && sz.label.tr) ? sz.label.tr : sz.id;
+    var labelEn = (sz.label && sz.label.en) ? sz.label.en : labelTr;
     var btn = document.createElement('button');
     btn.className = 'pb-size' + (idx === 0 ? ' on' : '');
     btn.setAttribute('data-size',  sz.id);
     btn.setAttribute('data-price', sz.price);
     btn.innerHTML = esc(sz.id) +
-      ' <span>' + esc(labelTr) + '</span>' +
+      ' <span data-tr="' + esc(labelTr) + '" data-en="' + esc(labelEn) + '">' + esc(labelTr) + '</span>' +
       '<span class="pb-size-value">' + sz.price + ' \u20BA</span>';
     sizeRow.appendChild(btn);
   });
@@ -1329,7 +1193,6 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
   sizeSection.appendChild(sizeRow);
   inner.appendChild(sizeSection);
 
-  /* Bölüm ayraç */
   var div1 = document.createElement('div'); div1.className = 'pb-divider';
   inner.appendChild(div1);
 
@@ -1337,32 +1200,34 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
   (builder.sections || []).forEach(function(sec) {
     var secDiv = document.createElement('div');
     secDiv.className = 'pb-section';
+    var secLabelTr = (sec.label && sec.label.tr) ? sec.label.tr : '';
+    var secLabelEn = (sec.label && sec.label.en) ? sec.label.en : secLabelTr;
 
     if (sec.type === 'drinks') {
-      /* İçecek bölümü */
       var lbl = document.createElement('div');
       lbl.className = 'pb-sec-label';
-      var labelTr = (sec.label && sec.label.tr) ? sec.label.tr : '';
-      lbl.innerHTML = esc(labelTr) +
-        ' <span class="pb-sec-optional">(opsiyonel)</span>';
+      lbl.innerHTML =
+        '<span data-tr="' + esc(secLabelTr) + '" data-en="' + esc(secLabelEn) + '">' + esc(secLabelTr) + '</span>' +
+        ' <span class="pb-sec-optional" data-tr="(opsiyonel)" data-en="(optional)">(opsiyonel)</span>';
       secDiv.appendChild(lbl);
 
       var drinkList = document.createElement('div');
       drinkList.className = 'pb-drink-list';
       (sec.items || []).forEach(function(drink) {
         var dTr  = (drink.label && drink.label.tr) ? drink.label.tr : drink.id;
-        var noteStr = drink.note ? drink.note.tr : (drink.price > 0 ? drink.price + '\u20BA' : '\u20BA0');
-        var drinkNoteEn = drink.note ? (drink.note.en || noteStr) : noteStr;
+        var dEn  = (drink.label && drink.label.en) ? drink.label.en : dTr;
+        var noteStr   = drink.note ? drink.note.tr : (drink.price > 0 ? drink.price + '\u20BA' : '\u20BA0');
+        var noteStrEn = drink.note ? (drink.note.en || noteStr) : noteStr;
         var unitPriceAttrs = drink.note
-          ? ' data-tr="' + esc(drink.note.tr) + '" data-en="' + esc(drinkNoteEn) + '"'
+          ? ' data-tr="' + esc(drink.note.tr) + '" data-en="' + esc(noteStrEn) + '"'
           : '';
         var dRow = document.createElement('div');
         dRow.className = 'pb-drink-row';
         dRow.setAttribute('data-drink', drink.id);
-        dRow.setAttribute('data-price',  drink.price || 0);
+        dRow.setAttribute('data-price', drink.price || 0);
         dRow.innerHTML =
           '<div class="pb-drink-info">' +
-            '<span class="pb-drink-name">' + esc(dTr) + '</span>' +
+            '<span class="pb-drink-name" data-tr="' + esc(dTr) + '" data-en="' + esc(dEn) + '">' + esc(dTr) + '</span>' +
             '<span class="pb-drink-unit-price"' + unitPriceAttrs +
               (drink.note ? ' style="color:var(--pizza-gold)"' : '') + '>' +
               esc(noteStr) +
@@ -1377,7 +1242,6 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
       });
       secDiv.appendChild(drinkList);
 
-      /* Not (ikram metni) */
       if (noteTr) {
         var pnote = document.createElement('div');
         pnote.className = 'pnote';
@@ -1389,21 +1253,23 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
       }
 
     } else {
-      /* Tag bölümü */
       var lbl2 = document.createElement('div');
       lbl2.className = 'pb-sec-label';
-      lbl2.textContent = (sec.label && sec.label.tr) ? sec.label.tr : '';
+      lbl2.setAttribute('data-tr', secLabelTr);
+      lbl2.setAttribute('data-en', secLabelEn);
+      lbl2.textContent = secLabelTr;
       secDiv.appendChild(lbl2);
 
       var tagsDiv = document.createElement('div');
       tagsDiv.className = 'pb-tags';
       (sec.items || []).forEach(function(ing) {
         var ingTr = (ing.label && ing.label.tr) ? ing.label.tr : ing.id;
+        var ingEn = (ing.label && ing.label.en) ? ing.label.en : ingTr;
         var btn2 = document.createElement('button');
-        btn2.className = 'pb-tag' +
-          (ing.default ? ' on' : '') +
-          (ing.locked  ? ' locked' : '');
+        btn2.className = 'pb-tag' + (ing.default ? ' on' : '') + (ing.locked ? ' locked' : '');
         if (!ing.locked) btn2.setAttribute('data-ing', ing.id);
+        btn2.setAttribute('data-tr', ingTr);
+        btn2.setAttribute('data-en', ingEn);
         btn2.textContent = ingTr;
         tagsDiv.appendChild(btn2);
       });
@@ -1412,7 +1278,6 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
     inner.appendChild(secDiv);
   });
 
-  /* Bölüm ayraç */
   var div2 = document.createElement('div'); div2.className = 'pb-divider';
   inner.appendChild(div2);
 
@@ -1420,7 +1285,7 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
   var firstSize = builder.sizes && builder.sizes[0];
   inner.insertAdjacentHTML('beforeend',
     '<div class="pb-summary">' +
-      '<div class="pb-summary-label">Pizzan\u0131z</div>' +
+      '<div class="pb-summary-label" data-tr="Pizzan\u0131z" data-en="Your Pizza">Pizzan\u0131z</div>' +
       '<div class="pb-summary-text" id="pbSummaryText">Pizza sosu, mozzarella</div>' +
       '<div class="pb-summary-price">' +
         '<span class="pb-summary-size-badge" id="pbSizeBadge">' +
@@ -1429,13 +1294,13 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
         '<span id="pbPrice">' + (firstSize ? firstSize.price + ' \u20BA' : '') + '</span>' +
       '</div>' +
     '</div>' +
-    '<button class="pb-reset" id="pbReset">S\u0131f\u0131rla</button>' +
+    '<button class="pb-reset" id="pbReset" data-tr="S\u0131f\u0131rla" data-en="Reset">S\u0131f\u0131rla</button>' +
     '<button class="pb-order-btn" id="pbOrderBtn">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
         '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>' +
         '<line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>' +
       '</svg>' +
-      'Sipari\u015F Ver' +
+      '<span data-tr="Sipari\u015F Ver" data-en="Order Now">Sipari\u015F Ver</span>' +
     '</button>');
 
   div.appendChild(inner);
@@ -1457,43 +1322,32 @@ function renderRegularCategory(sec, cat) {
   var isFirst = true;
   (cat.sections || []).forEach(function(section) {
     var titleTr = (section.title && section.title.tr) ? section.title.tr : '';
-    var dl = makeDivider(titleTr, isFirst ? 'margin-top:36px' : null);
+    var titleEn = (section.title && section.title.en) ? section.title.en : titleTr;
+    var dl = makeDivider(titleTr, titleEn, isFirst ? 'margin-top:36px' : null);
     sec.appendChild(dl);
     isFirst = false;
-
     (section.items || []).forEach(function(item) {
       sec.appendChild(makeItemRow(item));
     });
-
-    /* Bölüm seviyesi allerjen */
-    if (section.allergens) sec.appendChild(makeAllergenNote(allergenAdapter(section.allergens)));
+    var sNote = makeAllergenNote(allergenAdapter(section.allergens));
+    if (sNote) sec.appendChild(sNote);
   });
-
-  /* Kategori seviyesi allerjen */
-  if (cat.allergens) sec.appendChild(makeAllergenNote(allergenAdapter(cat.allergens)));
+  var cNote = makeAllergenNote(allergenAdapter(cat.allergens));
+  if (cNote) sec.appendChild(cNote);
 }
 
 /* ─────────────────────────────────────────────────────────────────
    RENDER: PİZZA KATEGORİSİ
 ───────────────────────────────────────────────────────────────── */
 function renderPizzaCategory(sec, cat) {
-  /* Preset pizzalar */
-  var dl = makeDivider('El A\u00E7mas\u0131 Pizzalar', 'margin-top:36px');
-  sec.appendChild(dl);
-
+  sec.appendChild(makeDivider('El A\u00E7mas\u0131 Pizzalar', 'Hand-Stretched Pizzas', 'margin-top:36px'));
   (cat.presets || []).forEach(function(item) {
     sec.appendChild(makePizzaPresetRow(item));
   });
-
-  /* Builder */
-  var dl2 = makeDivider('Kendi Pizzan\u0131 Olu\u015Ftur', 'margin-top:46px');
-  sec.appendChild(dl2);
-
+  sec.appendChild(makeDivider('Kendi Pizzan\u0131 Olu\u015Ftur', 'Build Your Own Pizza', 'margin-top:46px'));
   var noteTr = cat.note && cat.note.tr ? cat.note.tr : '';
   var noteEn = cat.note && cat.note.en ? cat.note.en : '';
   sec.appendChild(makePizzaBuilder(cat.builder || {}, noteTr, noteEn));
-
-  /* Not metni (aşağıda) */
   if (cat.builderNote) {
     var pnote = document.createElement('div');
     pnote.className = 'pnote';
@@ -1504,25 +1358,25 @@ function renderPizzaCategory(sec, cat) {
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   AKORDEON BAŞLAT (renderMenu'dan sonra çağrılır)
+   AKORDEON BAŞLAT
 ───────────────────────────────────────────────────────────────── */
 function initAccordion() {
   accordionIds.forEach(function(id) {
     var sec = document.getElementById(id);
     if (!sec) return;
 
-    /* İpucu bandı */
     var hint = document.createElement('div');
     hint.className = 'tap-hint';
     hint.innerHTML =
       '<div class="tap-hint-badge">' +
-        '<span class="tap-hint-text">daha fazla bilgi için ürüne dokun</span>' +
+        '<span class="tap-hint-text" data-tr="daha fazla bilgi için ürüne dokun" data-en="tap item for more info">daha fazla bilgi için ürüne dokun</span>' +
       '</div>';
     var firstDl = sec.querySelector('.dl');
     if (firstDl) sec.insertBefore(hint, firstDl);
 
     sec.querySelectorAll('.row[data-info]').forEach(function(row) {
-      var info = row.getAttribute('data-info');
+      var info   = row.getAttribute('data-info');
+      var infoEn = row.getAttribute('data-info-en') || '';
       if (!info) return;
 
       var rw = document.createElement('div');
@@ -1544,12 +1398,11 @@ function initAccordion() {
 
       var ri = document.createElement('div');
       ri.className = 'rinfo';
-      var infoEn = row.getAttribute('data-info-en') || '';
-      var infoDisplay = (typeof currentLang !== 'undefined' && currentLang === 'en' && infoEn) ? infoEn : info;
+      var infoDisplay = (currentLang === 'en' && infoEn) ? infoEn : info;
       ri.innerHTML =
         '<div class="rinfo-inner"><div class="rinfo-body">' +
           '<div class="rinfo-icon">\u2726 &nbsp; \u2726 &nbsp; \u2726</div>' +
-          '<p class="rinfo-text">' + infoDisplay + '</p>' +
+          '<p class="rinfo-text" data-tr="' + esc(info) + '" data-en="' + esc(infoEn) + '">' + esc(infoDisplay) + '</p>' +
         '</div></div>';
       rw.appendChild(ri);
 
@@ -1558,7 +1411,7 @@ function initAccordion() {
       }, {passive: false});
 
       row.addEventListener('click', function(e) {
-        if (e.target.closest('.abox,.allergen-note')) return;
+        if (e.target.closest('.abox,.allergen-note,.rinfo')) return;
         row.classList.add('no-slide');
         setTimeout(function() { row.classList.remove('no-slide'); }, 400);
         var wasOpen = rw.classList.contains('open');
@@ -1597,17 +1450,20 @@ function initPizzaBuilder(builderData) {
   var orderBtn    = document.getElementById('pbOrderBtn');
   var NTFY_KANAL  = 'pizza-siparisler-benapizza';
   if (!builder) return;
-  var orderBtnOrigHTML = orderBtn.innerHTML; /* SVG + metin kaybolmasın */
+  function getOrderBtnOrigHTML() {
+    var label = currentLang === 'en' ? 'Order Now' : 'Sipari\u015F Ver';
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span data-tr="Sipari\u015F Ver" data-en="Order Now">' + label + '</span>';
+  }
 
-  /* sizeLabels JSON'dan üret */
-  var sizeLabels = {};
+  /* Boyut etiketleri JSON'dan üret */
+  var sizeLabels   = {};
   var sizeLabelsEn = {};
-  (builderData && builderData.sizes || []).forEach(function(sz) {
+  (builderData.sizes || []).forEach(function(sz) {
     sizeLabels[sz.id]   = sz.id + ' \u00B7 ' + ((sz.label && sz.label.tr) || sz.id);
     sizeLabelsEn[sz.id] = sz.id + ' \u00B7 ' + ((sz.label && sz.label.en) || sz.id);
   });
 
-  var firstSz = builderData && builderData.sizes && builderData.sizes[0];
+  var firstSz      = builderData.sizes && builderData.sizes[0];
   var currentSize  = firstSz ? firstSz.id    : 'S';
   var currentPrice = firstSz ? firstSz.price : 0;
 
@@ -1636,30 +1492,37 @@ function initPizzaBuilder(builderData) {
       countEl.textContent = n;
       row.classList.toggle('active', n > 0);
       updateSummary();
-    }, {passive: true});
+    });
     row.querySelector('.pb-step-minus').addEventListener('click', function(e) {
       e.stopPropagation();
       var n = Math.max(0, parseInt(countEl.textContent) - 1);
       countEl.textContent = n;
       row.classList.toggle('active', n > 0);
       updateSummary();
-    }, {passive: true});
+    });
   });
 
   resetBtn.addEventListener('click', function() {
     builder.querySelectorAll('.pb-tag[data-ing]').forEach(function(b) { b.classList.remove('on'); });
-    var mozz = builder.querySelector('.pb-tag[data-ing="Mozzarella"]');
-    if (mozz) mozz.classList.add('on');
+    /* JSON'daki default:true malzemeleri yeniden seç */
+    (builderData.sections || []).forEach(function(sec) {
+      (sec.items || []).forEach(function(ing) {
+        if (ing.default && !ing.locked) {
+          var btn = builder.querySelector('.pb-tag[data-ing="' + ing.id + '"]');
+          if (btn) btn.classList.add('on');
+        }
+      });
+    });
     builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
       r.querySelector('.pb-step-count').textContent = '0';
       r.classList.remove('active');
     });
     builder.querySelectorAll('.pb-size').forEach(function(b) { b.classList.remove('on'); });
-    var defaultSize = builder.querySelector('.pb-size');
-    if (defaultSize) {
-      defaultSize.classList.add('on');
-      currentSize  = defaultSize.getAttribute('data-size');
-      currentPrice = parseInt(defaultSize.getAttribute('data-price'));
+    var defaultSizeBtn = builder.querySelector('.pb-size');
+    if (defaultSizeBtn) {
+      defaultSizeBtn.classList.add('on');
+      currentSize  = defaultSizeBtn.getAttribute('data-size');
+      currentPrice = parseInt(defaultSizeBtn.getAttribute('data-price'));
     }
     updateSummary();
   }, {passive: true});
@@ -1679,64 +1542,64 @@ function initPizzaBuilder(builderData) {
       var ing = b.getAttribute('data-ing');
       if (ing) trIngs.push(ing);
     });
-    var trIngText = trIngs.join(', ');
     var baslik = 'Yeni Pizza Siparişi - ' + currentSize;
     var icerik = 'Boyut: ' + (sizeLabels[currentSize] || currentSize) +
-      '\nMalzemeler: ' + trIngText +
+      '\nMalzemeler: ' + trIngs.join(', ') +
       (drinkPartsO.length ? '\nİçecek: ' + drinkPartsO.join(', ') : '') +
       '\nFiyat: ' + totalPriceO + ' TL';
     orderBtn.disabled = true;
-    orderBtn.innerHTML = 'Gönderiliyor...';
+    orderBtn.innerHTML = currentLang === 'en' ? 'Sending\u2026' : 'G\u00F6nderiliyor\u2026';
     fetch('https://ntfy.sh/' + NTFY_KANAL, {
       method: 'POST',
       headers: {'Title': baslik, 'Priority': '4', 'Tags': 'pizza', 'Content-Type': 'text/plain; charset=utf-8'},
       body: icerik
     }).then(function(res) {
       if (res.ok) {
-        orderBtn.innerHTML = '\u2713 Sipariş Alındı!';
+        orderBtn.innerHTML = '\u2713 ' + (currentLang === 'en' ? 'Order Received!' : 'Sipari\u015F Al\u0131nd\u0131!');
         orderBtn.style.background = '#2A7A3A';
       } else {
-        orderBtn.innerHTML = 'Hata — Tekrar dene';
+        orderBtn.innerHTML = currentLang === 'en' ? 'Error \u2014 Try again' : 'Hata \u2014 Tekrar dene';
         orderBtn.style.background = '#8A3A2A';
         orderBtn.disabled = false;
       }
       setTimeout(function() {
-        orderBtn.innerHTML = currentLang === 'en' ? orderBtnOrigHTML.replace('Sipariş Ver', 'Order Now') : orderBtnOrigHTML;
+        orderBtn.innerHTML = getOrderBtnOrigHTML();
         orderBtn.style.background = '';
         orderBtn.disabled = false;
       }, 3000);
     }).catch(function() {
-      orderBtn.innerHTML = 'Bağlantı hatası — Tekrar dene';
+      orderBtn.innerHTML = currentLang === 'en' ? 'Connection error \u2014 Try again' : 'Ba\u011Flant\u0131 hatas\u0131 \u2014 Tekrar dene';
       orderBtn.style.background = '#8A3A2A';
       orderBtn.disabled = false;
       setTimeout(function() {
-        orderBtn.innerHTML = currentLang === 'en' ? orderBtnOrigHTML.replace('Sipariş Ver', 'Order Now') : orderBtnOrigHTML;
+        orderBtn.innerHTML = getOrderBtnOrigHTML();
         orderBtn.style.background = '';
       }, 3000);
     });
   }, {passive: true});
 
-  function tr(s) {
-    if (currentLang === 'en' && TRANSLATIONS[s]) return TRANSLATIONS[s];
-    return s;
-  }
-
   function updateSummary() {
-    var ings = [tr('Pizza Sosu')];
+    var ingsTr = ['Pizza Sosu'], ingsEn = ['Pizza Sauce'];
     builder.querySelectorAll('.pb-tag.on').forEach(function(b) {
       var ing = b.getAttribute('data-ing');
-      if (ing) ings.push(tr(ing));
+      if (ing) {
+        ingsTr.push(b.getAttribute('data-tr') || ing);
+        ingsEn.push(b.getAttribute('data-en') || ing);
+      }
     });
     var drinkParts = [], drinkPrice = 0;
     builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
       var n = parseInt(r.querySelector('.pb-step-count').textContent);
       if (n > 0) {
-        drinkParts.push(tr(r.getAttribute('data-drink')) + (n > 1 ? ' x' + n : ''));
+        var nameTr = r.querySelector('.pb-drink-name').getAttribute('data-tr') || r.getAttribute('data-drink');
+        var nameEn = r.querySelector('.pb-drink-name').getAttribute('data-en') || nameTr;
+        drinkParts.push((currentLang === 'en' ? nameEn : nameTr) + (n > 1 ? ' x' + n : ''));
         drinkPrice += parseInt(r.getAttribute('data-price')) * n;
       }
     });
-    var totalPrice  = currentPrice + drinkPrice;
-    var sep         = currentLang === 'en' ? ' · Drinks: ' : ' · İçecek: ';
+    var totalPrice = currentPrice + drinkPrice;
+    var ings = currentLang === 'en' ? ingsEn : ingsTr;
+    var sep  = currentLang === 'en' ? ' · Drinks: ' : ' · İçecek: ';
     summaryText.textContent = ings.join(', ') + (drinkParts.length ? sep + drinkParts.join(', ') : '');
     priceEl.textContent     = totalPrice + ' \u20BA';
     var szLbls = currentLang === 'en' ? sizeLabelsEn : sizeLabels;
@@ -1744,8 +1607,8 @@ function initPizzaBuilder(builderData) {
   }
 
   updateSummary();
-  document.getElementById('pizzaBuilder').addEventListener('preset-loaded', updateSummary);
-  document.getElementById('pizzaBuilder').addEventListener('lang-changed',  updateSummary);
+  builder.addEventListener('preset-loaded', updateSummary);
+  builder.addEventListener('lang-changed',  updateSummary);
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -1759,7 +1622,6 @@ function initPizzaPresets() {
       if (!preset) return;
       loadPreset(preset);
     }, {passive: true});
-
     var btn = row.querySelector('.pizza-order-shortcut');
     if (btn) {
       btn.addEventListener('click', function(e) {
@@ -1767,7 +1629,7 @@ function initPizzaPresets() {
         var preset = row.getAttribute('data-preset');
         if (!preset) return;
         loadPreset(preset, true);
-      }, {passive: true});
+      });
     }
   });
 
@@ -1775,28 +1637,23 @@ function initPizzaPresets() {
     var builder = document.getElementById('pizzaBuilder');
     if (!builder) return;
     var ings = preset.split(',').map(function(s) { return s.trim().toLocaleLowerCase('tr'); });
-
     builder.querySelectorAll('.pb-tag[data-ing]').forEach(function(b) { b.classList.remove('on'); });
     builder.querySelectorAll('.pb-tag[data-ing]').forEach(function(b) {
-      var ing = b.getAttribute('data-ing').toLocaleLowerCase('tr');
-      if (ings.indexOf(ing) > -1) b.classList.add('on');
+      if (ings.indexOf(b.getAttribute('data-ing').toLocaleLowerCase('tr')) > -1) b.classList.add('on');
     });
     builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
       r.querySelector('.pb-step-count').textContent = '0';
       r.classList.remove('active');
     });
-
-    var ev = new Event('preset-loaded');
-    builder.dispatchEvent(ev);
-
+    builder.dispatchEvent(new Event('preset-loaded'));
     builder.classList.remove('preset-loaded');
     void builder.offsetWidth;
     builder.classList.add('preset-loaded');
     setTimeout(function() { builder.classList.remove('preset-loaded'); }, 700);
 
-    var sizeRow    = builder.querySelector('.pb-size-row');
-    var scrollTarget = sizeRow || builder;
     setTimeout(function() {
+      var sizeRow = builder.querySelector('.pb-size-row');
+      var scrollTarget = sizeRow || builder;
       var rect   = scrollTarget.getBoundingClientRect();
       var offset = window.pageYOffset || document.documentElement.scrollTop;
       var pad    = Math.min(64, Math.max(16, window.innerHeight * 0.12));
@@ -1807,8 +1664,7 @@ function initPizzaPresets() {
           if (!orderEl) return;
           var r2  = orderEl.getBoundingClientRect();
           var o2  = window.pageYOffset || document.documentElement.scrollTop;
-          var pad2 = Math.min(48, Math.max(12, window.innerHeight * 0.08));
-          window.scrollTo({top: o2 + r2.top - pad2, behavior: 'smooth'});
+          window.scrollTo({top: o2 + r2.top - Math.min(48, window.innerHeight * 0.08), behavior: 'smooth'});
         }, 520);
       }
     }, 80);
@@ -1816,7 +1672,7 @@ function initPizzaPresets() {
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   ANA NAV DİNLEYİCİLER (statik elemanlar için — sayfa yüklenince)
+   ANA NAV DİNLEYİCİLER
 ───────────────────────────────────────────────────────────────── */
 document.getElementById('mainNav').addEventListener('click', function(e) {
   var btn = e.target.closest('[data-tab]');
@@ -1830,45 +1686,48 @@ document.getElementById('mainNav').addEventListener('click', function(e) {
 })();
 
 /* ─────────────────────────────────────────────────────────────────
-   MENÜ RENDER — JSON verisinden tüm içeriği üretir
+   RENDER YARDIMCILARI — renderMenu'dan ayrıştırılmış alt fonksiyonlar
 ───────────────────────────────────────────────────────────────── */
-function renderMenu(data) {
-  /* 1. cfg / cfgEn oluştur */
+function buildCfgMaps(data) {
   data.categories.forEach(function(cat) {
     cfg[cat.id] = {
-      cls:  cat.theme || '',
-      ey:   (cat.hero && cat.hero.eyebrow && cat.hero.eyebrow.tr) || '',
-      t:    (cat.hero && cat.hero.title   && cat.hero.title.tr)   || '',
-      sub:  (cat.hero && cat.hero.sub     && cat.hero.sub.tr)     || '',
-      foot: (cat.hero && cat.hero.foot    && cat.hero.foot.tr)    || '',
-      ext:  cat.showExtras || false,
-      ctaTitle: data.pizzaCta && cat.id === 'pizza' ? data.pizzaCta.title.tr : '',
-      ctaSub:   data.pizzaCta && cat.id === 'pizza' ? data.pizzaCta.sub.tr   : ''
+      cls:      cat.theme || '',
+      ey:       (cat.hero && cat.hero.eyebrow && cat.hero.eyebrow.tr) || '',
+      t:        (cat.hero && cat.hero.title   && cat.hero.title.tr)   || '',
+      sub:      (cat.hero && cat.hero.sub     && cat.hero.sub.tr)     || '',
+      foot:     (cat.hero && cat.hero.foot    && cat.hero.foot.tr)    || '',
+      ext:      cat.showExtras || false,
+      ctaTitle: (data.pizzaCta && cat.id === 'pizza') ? data.pizzaCta.title.tr : '',
+      ctaSub:   (data.pizzaCta && cat.id === 'pizza') ? data.pizzaCta.sub.tr   : ''
     };
     cfgEn[cat.id] = {
-      ey:   (cat.hero && cat.hero.eyebrow && cat.hero.eyebrow.en) || '',
-      t:    (cat.hero && cat.hero.title   && cat.hero.title.en)   || '',
-      sub:  (cat.hero && cat.hero.sub     && cat.hero.sub.en)     || '',
-      foot: (cat.hero && cat.hero.foot    && cat.hero.foot.en)    || '',
-      ctaTitle: data.pizzaCta && cat.id === 'pizza' ? data.pizzaCta.title.en : '',
-      ctaSub:   data.pizzaCta && cat.id === 'pizza' ? data.pizzaCta.sub.en   : ''
+      ey:       (cat.hero && cat.hero.eyebrow && cat.hero.eyebrow.en) || '',
+      t:        (cat.hero && cat.hero.title   && cat.hero.title.en)   || '',
+      sub:      (cat.hero && cat.hero.sub     && cat.hero.sub.en)     || '',
+      foot:     (cat.hero && cat.hero.foot    && cat.hero.foot.en)    || '',
+      ctaTitle: (data.pizzaCta && cat.id === 'pizza') ? data.pizzaCta.title.en : '',
+      ctaSub:   (data.pizzaCta && cat.id === 'pizza') ? data.pizzaCta.sub.en   : ''
     };
   });
+}
 
-  /* 2. Ekstralar */
+function renderExtras(data) {
   var extrasInner = document.getElementById('extrasInner');
-  if (extrasInner && data.extras && data.extras.length) {
-    var html = '<span class="extras-label">Ekstralar</span>' +
-               '<span class="extras-sep-dot">\u00B7</span>';
-    data.extras.forEach(function(ex) {
-      var lTr = (ex.label && ex.label.tr) ? ex.label.tr : ex.label;
-      html += '<span class="extra-pill">' + esc(lTr) +
-              ' <span class="extra-price">+' + ex.price + '\u20BA</span></span>';
-    });
-    extrasInner.innerHTML = html;
-  }
+  if (!extrasInner || !data.extras || !data.extras.length) return;
+  var html = '<span class="extras-label" data-tr="Ekstralar" data-en="Extras">Ekstralar</span>' +
+             '<span class="extras-sep-dot">\u00B7</span>';
+  data.extras.forEach(function(ex) {
+    var lTr = (ex.label && ex.label.tr) ? ex.label.tr : ex.label;
+    var lEn = (ex.label && ex.label.en) ? ex.label.en : lTr;
+    html += '<span class="extra-pill">' +
+              '<span data-tr="' + esc(lTr) + '" data-en="' + esc(lEn) + '">' + esc(lTr) + '</span>' +
+              ' <span class="extra-price">+' + ex.price + '\u20BA</span>' +
+            '</span>';
+  });
+  extrasInner.innerHTML = html;
+}
 
-  /* 3. Nav butonları (pizza hariç) */
+function renderNavButtons(data) {
   var mainNav = document.getElementById('mainNav');
   mainNav.innerHTML = '';
   data.categories.forEach(function(cat) {
@@ -1878,31 +1737,41 @@ function renderMenu(data) {
     btn.className = 'nb';
     btn.setAttribute('data-tab',   cat.id);
     btn.setAttribute('data-group', 'main');
-    btn.textContent = (cat.nav && cat.nav.tr) ? cat.nav.tr : cat.id;
+    var navTr = (cat.nav && cat.nav.tr) ? cat.nav.tr : cat.id;
+    var navEn = (cat.nav && cat.nav.en) ? cat.nav.en : navTr;
+    btn.setAttribute('data-tr', navTr);
+    btn.setAttribute('data-en', navEn);
+    btn.textContent = navTr;
     mainNav.appendChild(btn);
   });
+}
 
-  /* 4. Pizza CTA */
+function renderPizzaCTA(data) {
   var ctaTitleEl = document.getElementById('pizzaCTATitle');
   var ctaSubEl   = document.getElementById('pizzaCTASub');
-  if (data.pizzaCta) {
-    if (ctaTitleEl) ctaTitleEl.innerHTML  = data.pizzaCta.title.tr;
-    if (ctaSubEl)   ctaSubEl.textContent  = data.pizzaCta.sub.tr;
+  if (!data.pizzaCta) return;
+  /* title'da bold/em gibi markup olabilir, innerHTML kalabilir */
+  if (ctaTitleEl) {
+    ctaTitleEl.setAttribute('data-tr', data.pizzaCta.title.tr || '');
+    ctaTitleEl.setAttribute('data-en', data.pizzaCta.title.en || '');
+    ctaTitleEl.innerHTML = data.pizzaCta.title.tr || '';
   }
+  if (ctaSubEl) {
+    ctaSubEl.setAttribute('data-tr', data.pizzaCta.sub.tr || '');
+    ctaSubEl.setAttribute('data-en', data.pizzaCta.sub.en || '');
+    ctaSubEl.textContent = data.pizzaCta.sub.tr || '';
+  }
+}
 
-  /* 5. Bölümleri render et */
+function renderSections(data) {
   var wrap = document.getElementById('wrap');
   wrap.innerHTML = '';
   accordionIds = [];
-
-  var pizzaCat = null;
   data.categories.forEach(function(cat) {
     var sec = document.createElement('div');
     sec.id        = cat.id;
     sec.className = 'sec';
-
     if (cat.id === 'pizza') {
-      pizzaCat = cat;
       renderPizzaCategory(sec, cat);
     } else {
       renderRegularCategory(sec, cat);
@@ -1910,16 +1779,24 @@ function renderMenu(data) {
     }
     wrap.appendChild(sec);
   });
+}
 
-  /* 6. İlk sekmeye geç */
+/* ─────────────────────────────────────────────────────────────────
+   ANA RENDER FONKSİYONU — İnce orkestratör
+───────────────────────────────────────────────────────────────── */
+function renderMenu(data) {
+  buildCfgMaps(data);
+  renderExtras(data);
+  renderNavButtons(data);
+  renderPizzaCTA(data);
+  renderSections(data);
+
   var firstId = data.categories[0] ? data.categories[0].id : 'coffee';
   go(firstId);
 
-  /* 7-8. Tarayıcı DOM'u bir kere paint ettikten sonra başlat.
-     Bu olmadan rinfo elementleri 0fr initial state'i kaydetmez,
-     ilk tıklamada animasyon yerine snap olur. */
   requestAnimationFrame(function() {
     initAccordion();
+    var pizzaCat = data.categories.filter(function(c) { return c.id === 'pizza'; })[0];
     if (pizzaCat && pizzaCat.builder) {
       initPizzaBuilder(pizzaCat.builder);
       initPizzaPresets();
