@@ -718,29 +718,32 @@ body.pizza .lang-btn:hover{background:#2A1F18;border-color:var(--pizza-gold);col
   .foot{padding:28px 24px 32px;font-size:9px}.foot-inner{gap:12px}.foot-line{width:20px}
 }
 
+@keyframes lang-fade-out{
+  from{opacity:1;transform:translateY(0)}
+  to{opacity:0;transform:translateY(-5px)}
+}
 @keyframes lang-fade-in{
   from{opacity:0;transform:translateY(6px)}
   to{opacity:1;transform:translateY(0)}
 }
-.lang-transitioning .hero,
-.lang-transitioning .nav-group,
-.lang-transitioning .extras-wrap,
-.lang-transitioning .wrap,
-.lang-transitioning .foot{
-  opacity:0;transform:translateY(6px);
-  transition:opacity .18s ease,transform .18s ease;
+.lang-fading-out .hero,
+.lang-fading-out .nav-group,
+.lang-fading-out .extras-wrap,
+.lang-fading-out .wrap,
+.lang-fading-out .foot{
+  animation:lang-fade-out .18s ease forwards;
 }
-.lang-transition-in .hero,
-.lang-transition-in .nav-group,
-.lang-transition-in .extras-wrap,
-.lang-transition-in .wrap,
-.lang-transition-in .foot{
-  animation:lang-fade-in .3s cubic-bezier(0.25,0.46,0.45,0.94) both;
+.lang-fading-in .hero,
+.lang-fading-in .nav-group,
+.lang-fading-in .extras-wrap,
+.lang-fading-in .wrap,
+.lang-fading-in .foot{
+  animation:lang-fade-in .32s cubic-bezier(0.25,0.46,0.45,0.94) both;
 }
-.lang-transition-in .nav-group{animation-delay:.03s}
-.lang-transition-in .extras-wrap{animation-delay:.06s}
-.lang-transition-in .wrap{animation-delay:.10s}
-.lang-transition-in .foot{animation-delay:.14s}
+.lang-fading-in .nav-group{animation-delay:.03s}
+.lang-fading-in .extras-wrap{animation-delay:.06s}
+.lang-fading-in .wrap{animation-delay:.10s}
+.lang-fading-in .foot{animation-delay:.14s}
 .row[role='button']:focus-visible{
   outline:2px solid var(--th-accent);
   outline-offset:-2px;
@@ -891,18 +894,20 @@ function applyLang(lang) {
     if (_busy) return;
     _busy = true;
     var body = document.body;
-    /* 1) Fade-out */
-    body.classList.add('lang-transitioning');
+    /* 1) Fade-out animasyonu başlat */
+    body.classList.add('lang-fading-out');
     setTimeout(function() {
       /* 2) İçerik güncelle */
       applyLang(currentLang === 'tr' ? 'en' : 'tr');
-      body.classList.remove('lang-transitioning');
-      /* 3) Fade-in */
-      body.classList.add('lang-transition-in');
+      /* 3) Fade-out class'ı kaldır, reflow zorla (animasyon restart için şart) */
+      body.classList.remove('lang-fading-out');
+      void body.offsetHeight; /* tarayıcıyı yeniden hesaplamaya zorla */
+      /* 4) Fade-in animasyonu başlat */
+      body.classList.add('lang-fading-in');
       setTimeout(function() {
-        body.classList.remove('lang-transition-in');
+        body.classList.remove('lang-fading-in');
         _busy = false;
-      }, 350);
+      }, 480);
     }, 180);
   });
 })();
