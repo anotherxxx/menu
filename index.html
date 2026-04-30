@@ -866,7 +866,7 @@ function applyLang(lang) {
   });
 
   /* allergen-body: HTML içerik (strong tag'leri var) */
-  document.querySelectorAll('.allergen-body[data-tr]').forEach(function(el) {
+  document.querySelectorAll('.allergen-body[data-tr], .html-i18n[data-tr]').forEach(function(el) {
     el.innerHTML = lang === 'en'
       ? (el.getAttribute('data-en') || el.getAttribute('data-tr'))
       : el.getAttribute('data-tr');
@@ -891,13 +891,18 @@ function applyLang(lang) {
     if (_busy) return;
     _busy = true;
     var body = document.body;
-    body.classList.add('lang-fade');
+    /* 1) Fade-out */
+    body.classList.add('lang-transitioning');
     setTimeout(function() {
+      /* 2) İçerik güncelle */
       applyLang(currentLang === 'tr' ? 'en' : 'tr');
+      body.classList.remove('lang-transitioning');
+      /* 3) Fade-in */
+      body.classList.add('lang-transition-in');
       setTimeout(function() {
-        body.classList.remove('lang-fade');
+        body.classList.remove('lang-transition-in');
         _busy = false;
-      }, 200);
+      }, 350);
     }, 180);
   });
 })();
@@ -946,14 +951,6 @@ function go(tab, opts) {
       var rBtn = r.querySelector('[role="button"]');
       if (rBtn) rBtn.setAttribute('aria-expanded', 'false');
     });
-  }
-
-  var cta = document.getElementById('pizzaCTA');
-  if (cta) {
-    var ctaTitle = document.getElementById('pizzaCTATitle');
-    var ctaSub   = document.getElementById('pizzaCTASub');
-    if (ctaTitle) ctaTitle.innerHTML  = _c.ctaTitle || '';
-    if (ctaSub)   ctaSub.textContent  = _c.ctaSub   || '';
   }
 }
 
@@ -1080,10 +1077,10 @@ function makeItemRow(item) {
   var pb = document.createElement('div');
   pb.className = 'pb';
   var psText = item.psLabel ? item.psLabel : sizes.join(' · ');
-  var pvText = item.pvLabel ? item.pvLabel : prices.join(' · ') + '\u20BA';
+  var pvText = item.pvLabel ? item.pvLabel : (prices.length ? prices.join(' · ') + '\u20BA' : '');
   pb.innerHTML =
     '<span class="ps">' + esc(psText) + '</span>' +
-    '<span class="pv">' + esc(pvText) + '</span>';
+    (pvText ? '<span class="pv">' + esc(pvText) + '</span>' : '');
   row.appendChild(pb);
   return row;
 }
@@ -1364,6 +1361,8 @@ function initAccordion() {
   accordionIds.forEach(function(id) {
     var sec = document.getElementById(id);
     if (!sec) return;
+
+    if (!sec.querySelector('.row[data-info]')) return; /* açıklaması olan item yoksa hint gösterme */
 
     var hint = document.createElement('div');
     hint.className = 'tap-hint';
@@ -1750,10 +1749,11 @@ function renderPizzaCTA(data) {
   var ctaTitleEl = document.getElementById('pizzaCTATitle');
   var ctaSubEl   = document.getElementById('pizzaCTASub');
   if (!data.pizzaCta) return;
-  /* title'da bold/em gibi markup olabilir, innerHTML kalabilir */
+  /* ctaTitleEl içinde <em> gibi markup olabilir — allergen-body gibi innerHTML ile güncellenir */
   if (ctaTitleEl) {
     ctaTitleEl.setAttribute('data-tr', data.pizzaCta.title.tr || '');
     ctaTitleEl.setAttribute('data-en', data.pizzaCta.title.en || '');
+    ctaTitleEl.classList.add('html-i18n');
     ctaTitleEl.innerHTML = data.pizzaCta.title.tr || '';
   }
   if (ctaSubEl) {
