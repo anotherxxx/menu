@@ -952,6 +952,7 @@ function go(tab, opts) {
 function formatKcal(raw) {
   if (!raw) return '';
   if (raw.indexOf('kcal') >= 0) return raw;
+  if (raw.indexOf('(') >= 0) return raw;
   return raw + ' kcal';
 }
 
@@ -1445,7 +1446,7 @@ function initPizzaBuilder(builderData) {
   var sizeBadge   = document.getElementById('pbSizeBadge');
   var resetBtn    = document.getElementById('pbReset');
   var orderBtn    = document.getElementById('pbOrderBtn');
-  var NTFY_KANAL  = 'pizza-siparisler-benapizza';
+  var NTFY_KANAL  = 'pizza-siparis-deneme1111';
   if (!builder) return;
   function getOrderBtnOrigHTML() {
     var label = currentLang === 'en' ? 'Order Now' : 'Sipari\u015F Ver';
@@ -1529,7 +1530,8 @@ function initPizzaBuilder(builderData) {
     builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
       var n = parseInt(r.querySelector('.pb-step-count').textContent);
       if (n > 0) {
-        drinkPartsO.push(r.getAttribute('data-drink') + (n > 1 ? ' x' + n : ''));
+        var nameTrO = r.querySelector('.pb-drink-name').getAttribute('data-i18n-tr') || r.getAttribute('data-drink');
+        drinkPartsO.push(nameTrO + (n > 1 ? ' x' + n : ''));
         drinkPriceO += parseInt(r.getAttribute('data-price')) * n;
       }
     });
@@ -1537,7 +1539,7 @@ function initPizzaBuilder(builderData) {
     var trIngs = ['Pizza Sosu'];
     builder.querySelectorAll('.pb-tag.on').forEach(function(b) {
       var ing = b.getAttribute('data-ing');
-      if (ing) trIngs.push(ing);
+      if (ing) trIngs.push(b.getAttribute('data-i18n-tr') || ing);
     });
     var baslik = 'Yeni Pizza Siparişi - ' + currentSize;
     var icerik = 'Boyut: ' + (sizeLabels[currentSize] || currentSize) +
