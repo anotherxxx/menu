@@ -1548,9 +1548,10 @@ function initPizzaBuilder(builderData) {
       '\nFiyat: ' + totalPriceO + ' TL';
     orderBtn.disabled = true;
     orderBtn.innerHTML = currentLang === 'en' ? 'Sending\u2026' : 'G\u00F6nderiliyor\u2026';
-    fetch('https://ntfy.sh/' + NTFY_KANAL, {
+    fetch('https://ntfy.sh/' + NTFY_KANAL +
+      '?title=' + encodeURIComponent(baslik) +
+      '&priority=4&tags=pizza', {
       method: 'POST',
-      headers: {'Title': baslik, 'Priority': '4', 'Tags': 'pizza', 'Content-Type': 'text/plain; charset=utf-8'},
       body: icerik
     }).then(function(res) {
       if (res.ok) {
