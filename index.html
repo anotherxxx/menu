@@ -106,16 +106,16 @@ body.pizza .pizza-nav-box{background:rgba(42,31,24,.75)}
 body.pizza .pizza-cta:hover{background:rgba(255,255,255,.04)}
 .pizza-cta:hover .pizza-cta-chevron{opacity:.7;transform:translateY(-50%) translateX(3px)}
 .pizza-cta:active{background:rgba(0,0,0,.07)}
-.pizza-cta.pizza-active{
+.pizza-cta.on{
   background:var(--th-bg);
   box-shadow:0 1px 4px rgba(0,0,0,.1),0 0 0 .5px rgba(0,0,0,.06);
 }
-body.pizza .pizza-cta.pizza-active{
+body.pizza .pizza-cta.on{
   background:#1A1208;
   box-shadow:0 1px 4px rgba(0,0,0,.3);
 }
-.pizza-cta.pizza-active .pizza-cta-title{color:var(--th-dark);font-weight:600}
-.pizza-cta.pizza-active .pizza-cta-chevron{opacity:.6;transform:translateY(-50%) rotate(90deg)}
+.pizza-cta.on .pizza-cta-title{color:var(--th-dark);font-weight:600}
+.pizza-cta.on .pizza-cta-chevron{opacity:.6;transform:translateY(-50%) rotate(90deg)}
 @media(max-width:639px){
   .pizza-cta{min-height:44px}
   .pizza-cta-inner{padding:0 32px}
@@ -918,23 +918,25 @@ function applyLang(lang) {
 function go(tab, opts) {
   var shouldCloseAccordions = !opts || opts.closeAccordions !== false;
   currentTab = tab;
-  document.querySelectorAll('.sec').forEach(function(e) { e.classList.remove('on'); });
-  document.querySelectorAll('.nb').forEach(function(e) { e.classList.remove('on'); });
-  var ctaBtn = document.getElementById('pizzaCTA');
-  if (ctaBtn) ctaBtn.classList.remove('on');
 
   var secEl = document.getElementById(tab);
-  if (secEl) secEl.classList.add('on');
-  var btn = document.querySelector('[data-tab="' + tab + '"]');
-  if (btn) btn.classList.add('on');
+  var sectionAlreadyOn = secEl && secEl.classList.contains('on');
+
+  if (!sectionAlreadyOn) {
+    /* Sekme geçişi — section animasyonu + nav güncelleme */
+    document.querySelectorAll('.sec').forEach(function(e) { e.classList.remove('on'); });
+    if (secEl) secEl.classList.add('on');
+    document.querySelectorAll('.nb').forEach(function(e) { e.classList.remove('on'); });
+    var ctaBtn = document.getElementById('pizzaCTA');
+    if (ctaBtn) ctaBtn.classList.remove('on');
+    var activeBtn = document.querySelector('[data-tab="' + tab + '"]');
+    if (activeBtn) activeBtn.classList.add('on');
+  }
 
   var _cfg   = cfg[tab]   || {};
   var _cfgEn = cfgEn[tab] || {};
   var _c = currentLang === 'en' ? mergeLang(_cfg, _cfgEn) : _cfg;
 
-  document.body.classList.remove('lang-tr');
-  document.body.classList.remove('lang-en');
-  document.body.classList.add('lang-' + currentLang);
   ['ice','tea','shop','pizza'].forEach(function(c) { document.body.classList.remove(c); });
   if (_c.cls) document.body.classList.add(_c.cls);
 
@@ -944,7 +946,12 @@ function go(tab, opts) {
   var footTxt = document.getElementById('foot-text');
   var extWrap = document.getElementById('extras-wrap');
   if (eyebrow) eyebrow.textContent = _c.ey  || '';
-  if (htitle)  htitle.innerHTML    = _c.t   || '';
+  if (htitle) {
+    htitle.setAttribute('data-tr', _cfg.t  || '');
+    htitle.setAttribute('data-en', _cfgEn.t || _cfg.t || '');
+    htitle.classList.add('html-i18n');
+    htitle.innerHTML = _c.t || '';
+  }
   if (hsub)    hsub.textContent    = _c.sub || '';
   if (footTxt) footTxt.textContent = _c.foot || '';
   if (extWrap) extWrap.style.display = _c.ext ? '' : 'none';
@@ -986,9 +993,7 @@ function makeDivider(titleTr, titleEn, extraStyle) {
   dl.className = 'dl';
   if (extraStyle) dl.style.cssText = extraStyle;
   dl.innerHTML =
-    '<div class="dl-line"></div>' +
-    '<span class="dl-text" data-tr="' + esc(titleTr) + '" data-en="' + esc(titleEn || titleTr) + '">' + esc(titleTr) + '</span>' +
-    '<div class="dl-line"></div>';
+    '<span class="dl-text" data-tr="' + esc(titleTr) + '" data-en="' + esc(titleEn || titleTr) + '">' + esc(titleTr) + '</span>';
   return dl;
 }
 
@@ -1151,7 +1156,7 @@ function makePizzaPresetRow(item) {
     '</div>' +
     '<div class="pb">' +
       '<span class="ps">' + esc(sizes.join(' · ')) + '</span>' +
-      '<span class="pv">' + esc(prices.join(' · ')) + '&#8378;</span>' +
+      (prices.length ? '<span class="pv">' + esc(prices.join(' · ')) + '&#8378;</span>' : '') +
       '<button class="pizza-order-shortcut" data-tr="Sipariş Ver" data-en="Order Now">Sipariş Ver</button>' +
     '</div>';
   return row;
@@ -1354,6 +1359,8 @@ function renderPizzaCategory(sec, cat) {
     var pnote = document.createElement('div');
     pnote.className = 'pnote';
     pnote.style.cssText = 'margin-top:24px;padding:12px 16px;font-size:12px;';
+    pnote.setAttribute('data-tr', cat.builderNote.tr || '');
+    pnote.setAttribute('data-en', cat.builderNote.en || cat.builderNote.tr || '');
     pnote.textContent = cat.builderNote.tr || '';
     sec.appendChild(pnote);
   }
@@ -1377,6 +1384,7 @@ function initAccordion() {
       '</div>';
     var firstDl = sec.querySelector('.dl');
     if (firstDl) sec.insertBefore(hint, firstDl);
+    else sec.insertBefore(hint, sec.firstChild);
 
     sec.querySelectorAll('.row[data-info]').forEach(function(row) {
       var info   = row.getAttribute('data-info');
@@ -1705,10 +1713,12 @@ function buildCfgMaps(data) {
       ctaSub:   (data.pizzaCta && cat.id === 'pizza') ? data.pizzaCta.sub.tr   : ''
     };
     cfgEn[cat.id] = {
+      cls:      cat.theme || '',
       ey:       (cat.hero && cat.hero.eyebrow && cat.hero.eyebrow.en) || '',
       t:        (cat.hero && cat.hero.title   && cat.hero.title.en)   || '',
       sub:      (cat.hero && cat.hero.sub     && cat.hero.sub.en)     || '',
       foot:     (cat.hero && cat.hero.foot    && cat.hero.foot.en)    || '',
+      ext:      cat.showExtras || false,
       ctaTitle: (data.pizzaCta && cat.id === 'pizza') ? data.pizzaCta.title.en : '',
       ctaSub:   (data.pizzaCta && cat.id === 'pizza') ? data.pizzaCta.sub.en   : ''
     };
