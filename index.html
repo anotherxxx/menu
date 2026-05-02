@@ -2,10 +2,14 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 :root{
   --c-bg:#FAF8F4;--c-dark:#1C1410;--c-espresso:#2E1B0E;
   --c-gold:#B8935A;--c-gold-pale:#EDE0CC;--c-gold-dim:rgba(184,147,90,.1);
@@ -602,100 +606,206 @@ body.pizza .lang-btn:hover{background:#2A1F18;border-color:var(--pizza-gold);col
 .lang-btn.is-en{background:var(--th-mid);border-color:var(--th-mid);color:var(--th-bg)}
 body.pizza .lang-btn.is-en{background:var(--pizza-gold);border-color:var(--pizza-gold);color:var(--pizza-deep)}
 
-.foot{text-align:center;font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:4px;text-transform:uppercase;color:var(--th-border);transition:color .5s}
+.foot{text-align:center;font-family:'Outfit',sans-serif;font-weight:300;letter-spacing:4px;text-transform:uppercase;color:var(--th-border);transition:color .5s;padding-bottom:max(28px,env(safe-area-inset-bottom))}
 .foot-inner{display:inline-flex;align-items:center;gap:12px}
 .foot-line{width:20px;height:1px;background:currentColor;opacity:.5}
 
 @media(max-width:639px){
-  .hero{padding:24px 16px 0}
-  .hero-ornament{margin-bottom:10px}.hero-ornament-line{width:20px}
-  .eyebrow{font-size:8px;margin-bottom:8px}
-  .hero-title{font-size:clamp(44px,14vw,68px);letter-spacing:-1px}
-  .hero-sub{font-size:9px;margin-top:12px}
-  .nav-group{padding:16px 12px 0;gap:8px;width:100%}
+  /* ── Genel ── */
+  body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+  /* ── Hero ── */
+  .hero{padding:28px 16px 0}
+  .hero-ornament{margin-bottom:10px}
+  .hero-ornament-line{width:18px}
+  .eyebrow{font-size:8px;letter-spacing:4px;margin-bottom:9px}
+  .hero-title{font-size:clamp(40px,12.5vw,64px);letter-spacing:-1.5px;line-height:.88}
+  .hero-sub{font-size:8.5px;letter-spacing:2.5px;margin-top:10px}
+
+  /* ── Dil butonu ── */
+  .lang-bar{padding:10px 14px 0;display:flex;justify-content:flex-end}
+  .lang-btn{
+    min-height:36px;padding:0 13px;
+    font-size:8.5px;letter-spacing:2px;
+    border-radius:18px;
+  }
+
+  /* ── Nav ── */
+  .nav-group{padding:14px 12px 0;gap:7px;width:100%}
   .nav-row{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .nav-row::-webkit-scrollbar{display:none}
-  .nav{width:100%;min-width:max-content}
-  .nb{flex:1;font-size:10px;padding:0 10px;min-height:44px}
-  .food-sep-label{font-size:7px}
-  .extras-wrap{padding:12px 12px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nav{width:100%;min-width:max-content;border-radius:9px;padding:3px;gap:2px}
+  .nb{
+    flex:1;font-size:10px;letter-spacing:.8px;
+    padding:0 10px;min-height:44px;border-radius:7px;
+  }
+  .food-sep{margin:0 1px}
+  .food-sep-label{font-size:7px;letter-spacing:2px}
+
+  /* ── Pizza CTA ── */
+  .pizza-nav-box{border-radius:9px;padding:3px}
+  .pizza-cta{min-height:44px;border-radius:7px}
+  .pizza-cta-inner{padding:0 28px}
+  .pizza-cta-title{font-size:10.5px;letter-spacing:.8px}
+  .pizza-cta-chevron{font-size:16px;right:10px}
+
+  /* ── Ekstralar ── */
+  .extras-wrap{padding:10px 12px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .extras{flex-wrap:nowrap;gap:5px}
-  .extras-label{font-size:7.5px;white-space:nowrap}
-  .extra-pill{font-size:9.5px;padding:5px 10px;white-space:nowrap;flex-shrink:0}
-  .wrap{padding:0 12px 60px}
-  .dl{margin:28px 0 2px}
-  .row{padding:14px 10px;gap:10px}
-  .rname{font-size:19px}
-  .rdesc{font-size:11.5px;margin-top:3px;line-height:1.5}
-  .kcal{margin-top:5px}.kcal-text{font-size:9px}
-  .pb{min-width:58px;max-width:80px}
-  .ps{font-size:7px;margin-bottom:2px;word-break:keep-all}
-  .pv{font-size:13px}
-  .rchev{font-size:13px;margin-top:3px}
-  .rw.open .rinfo{max-height:700px}
-  .rw.open{border-radius:12px}
-  .rinfo-inner{border-radius:0 0 12px 12px}
-  .rinfo-body{padding:14px 16px 16px 17px;gap:10px}
-  .abox{margin-top:9px;padding:9px 11px}.alabel{font-size:6.5px;margin-bottom:5px}
-  .atags{gap:4px}.atag{font-size:9px;padding:3px 8px}
+  .extras-label{font-size:7px;letter-spacing:2px;white-space:nowrap}
+  .extras-sep-dot{display:none}
+  .extra-pill{font-size:9px;padding:5px 10px;white-space:nowrap;flex-shrink:0;min-height:30px;border-radius:15px}
+
+  /* ── Menü içerik alanı ── */
+  .wrap{padding:0 12px max(72px,calc(60px + env(safe-area-inset-bottom)))}
+
+  /* ── Bölüm ayraçları ── */
+  .dl{margin:24px 0 2px}
+  .dl-text{font-size:7.5px;letter-spacing:3px}
+
+  /* ── Ürün satırları ── */
+  .row{
+    padding:13px 10px;gap:8px;
+    min-height:52px;align-items:center;
+  }
+  .row-left{flex:1;min-width:0}
+  .rname{font-size:18px;line-height:1.15;word-break:break-word}
+  .rname-wrap{gap:5px;flex-wrap:wrap}
+  .rdesc{font-size:12px;margin-top:3px;line-height:1.5;color:var(--th-muted)}
+  .kcal{margin-top:4px}
+  .kcal-text{font-size:9px}
+
+  /* ── Fiyat sütunu ── */
+  .pb{min-width:54px;max-width:72px;flex-shrink:0}
+  .ps{font-size:7px;margin-bottom:2px;letter-spacing:.5px;line-height:1.3}
+  .pv{font-size:14px;letter-spacing:.5px}
+
+  /* ── Chevron ── */
+  .rchev{font-size:14px;margin-top:2px;opacity:.5}
+
+  /* ── Rozet ── */
+  .item-badge{font-size:7px;padding:2px 7px;letter-spacing:1.5px}
+
+  /* ── Akordeon kart ── */
+  .rw.open{border-radius:13px;margin-bottom:3px}
+  .rw.open .rinfo{max-height:900px}
+  .rinfo-inner{border-radius:0 0 13px 13px}
+  .rinfo-body{padding:14px 15px 16px 16px;gap:9px}
   .rinfo-icon{font-size:6px;letter-spacing:3px}
-  .rinfo-text{font-size:11.5px;line-height:1.75}
-  .tap-hint{margin:18px 0 2px}
-  .tap-hint-badge{padding:6px 14px}
-  .tap-hint-text{font-size:7.5px}
-  .tap-hint-icon{font-size:10px}
-  .allergen-note{margin-top:28px;padding-top:16px;gap:7px}
-  .allergen-body{font-size:10px}
-  .a-pills{gap:4px;margin-top:5px}.a-pill{font-size:8px;padding:2px 7px}
+  .rinfo-text{font-size:12px;line-height:1.75;text-align:left}
+
+  /* ── Alerjen kutusu ── */
+  .abox{margin-top:8px;padding:9px 11px;border-radius:0 6px 6px 0}
+  .alabel{font-size:6.5px;letter-spacing:2px;margin-bottom:5px}
+  .atags{gap:4px}
+  .atag{font-size:9px;padding:3px 8px}
+
+  /* ── Dokunma ipucu ── */
+  .tap-hint{margin:16px 0 2px}
+  .tap-hint-badge{padding:7px 14px;border-radius:20px}
+  .tap-hint-text{font-size:7.5px;letter-spacing:1.5px}
+
+  /* ── Alerjen notu ── */
+  .allergen-note{margin-top:24px;padding-top:14px;gap:7px}
+  .allergen-body{font-size:10px;line-height:1.6}
+  .a-pills{gap:4px;margin-top:6px}
+  .a-pill{font-size:8px;padding:3px 8px}
+
+  /* ── Ürün tablosu (shop) ── */
   .product-table td{font-size:12px;padding:9px 0}
-  .product-table th{font-size:7px}.pt-sub{font-size:9.5px}
-  .pnote{margin-top:24px;padding:11px 13px;font-size:10.5px}
-  .foot{padding:22px 12px 26px;font-size:8px}
-  .foot-inner{gap:8px}.foot-line{width:14px}
-  .lang-bar{padding:10px 14px 0}
+  .product-table th{font-size:7px;letter-spacing:1.5px}
+  .pt-sub{font-size:9.5px}
+
+  /* ── Not kutusu ── */
+  .pnote{margin-top:20px;padding:10px 13px;font-size:10.5px;border-radius:7px}
+
+  /* ── Footer ── */
+  .foot{padding:20px 12px 28px;font-size:8px;letter-spacing:3px}
+  .foot-inner{gap:8px}
+  .foot-line{width:12px}
+
+  /* ── Pizza builder ── */
   .pizza-builder{border-radius:11px;margin:0 0 14px}
   .pb-inner{padding:13px 12px 15px}
   .pb-section{margin-bottom:11px}
   .pb-header-title{font-size:22px;letter-spacing:-.5px}
   .pb-header-eyebrow{font-size:7px;letter-spacing:3px;margin-bottom:5px}
   .pb-divider{margin:10px 0}
-  /* Boyut butonları — parmak dostu */
   .pb-size-row{gap:5px}
   .pb-size{font-size:18px;padding:10px 4px;min-height:52px;border-radius:7px}
   .pb-size span{font-size:6.5px;letter-spacing:1.5px}
   .pb-size-value{font-size:5.5px}
-  /* Malzeme etiketleri */
   .pb-tags{gap:4px}
   .pb-tag{font-size:10.5px;padding:6px 10px;border-radius:5px;min-height:32px;display:inline-flex;align-items:center}
-  /* Bölüm başlığı */
   .pb-sec-label{font-size:7px;letter-spacing:2.5px;margin-bottom:7px}
-  /* İçecek chips */
   .pb-drink-chips{gap:4px}
   .pb-drink-chip{padding:6px 10px 6px 7px;min-height:32px}
   .pb-dc-label{font-size:10.5px}
   .pb-dc-price{font-size:8.5px}
   .pb-dc-count{font-size:8.5px}
   .pb-dc-minus{width:16px;height:16px;font-size:12px;margin-right:5px}
-  /* Özet */
   .pb-summary{padding:10px 11px;border-radius:7px}
   .pb-summary-label{font-size:6.5px;margin-bottom:6px}
   .pb-summary-text{font-size:11px;line-height:1.55}
   .pb-summary-price{font-size:13px;margin-top:9px;padding-top:9px}
   .pb-summary-size-badge{font-size:6.5px;padding:3px 7px}
-  /* Sıfırla + sipariş */
   .pb-reset{font-size:7px;margin-top:7px}
   .pb-order-btn{padding:14px;font-size:10.5px;margin-top:7px;border-radius:7px;min-height:48px;letter-spacing:2px}
   .pb-order-btn svg{width:13px;height:13px}
-  /* Preset satırı */
   .pizza-order-shortcut{font-size:8px;padding:4px 8px}
 }
 @media(max-width:375px){
+  /* ── Genel ── */
+  .hero{padding:22px 13px 0}
+  .hero-title{font-size:clamp(36px,11vw,52px);letter-spacing:-1px}
+  .eyebrow{font-size:7.5px;letter-spacing:3.5px;margin-bottom:7px}
+  .hero-sub{font-size:8px;letter-spacing:2px;margin-top:8px}
+
+  /* ── Nav ── */
+  .nav-group{padding:12px 10px 0;gap:6px}
+  .nb{font-size:9.5px;padding:0 8px;min-height:42px}
+  .food-sep-label{font-size:6.5px}
+
+  /* ── Ekstralar ── */
+  .extras-wrap{padding:8px 10px 0}
+  .extra-pill{font-size:8.5px;padding:4px 9px}
+  .extras-label{font-size:6.5px}
+
+  /* ── Menü alanı ── */
+  .wrap{padding:0 10px max(72px,calc(60px + env(safe-area-inset-bottom)))}
+  .dl{margin:20px 0 1px}
+  .dl-text{font-size:7px;letter-spacing:2.5px}
+
+  /* ── Ürün satırları ── */
+  .row{padding:12px 9px;gap:7px}
+  .rname{font-size:16px}
+  .rdesc{font-size:11px;margin-top:2px}
+  .kcal-text{font-size:8.5px}
+  .pb{min-width:50px}
+  .ps{font-size:6.5px}
+  .pv{font-size:13px}
+  .rchev{font-size:13px}
+  .item-badge{font-size:6.5px;padding:2px 6px}
+
+  /* ── Akordeon ── */
+  .rinfo-body{padding:12px 13px 14px 13px;gap:8px}
+  .rinfo-text{font-size:11px;line-height:1.7}
+  .abox{padding:8px 10px}
+  .alabel{font-size:6px;letter-spacing:2px}
+  .atag{font-size:8.5px;padding:3px 7px}
+
+  /* ── Footer ── */
+  .foot{padding:18px 10px 26px;font-size:7.5px;letter-spacing:2.5px}
+
+  /* ── Pizza builder ── */
   .pb-inner{padding:11px 10px 13px}
+  .pb-header-title{font-size:19px}
   .pb-size{font-size:16px;min-height:48px}
   .pb-size span{font-size:6px}
   .pb-tag{font-size:10px;padding:5px 8px}
   .pb-drink-chip{padding:5px 8px 5px 6px}
   .pb-dc-label{font-size:10px}
+  .pb-dc-price{font-size:8px}
   .pb-summary{padding:9px 10px}
   .pb-summary-text{font-size:10.5px}
   .pb-order-btn{font-size:10px;letter-spacing:1.5px;padding:13px}
