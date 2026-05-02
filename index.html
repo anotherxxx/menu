@@ -12,8 +12,7 @@
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 :root{
   --c-bg:#FAF8F4;--c-dark:#1C1410;--c-espresso:#2E1B0E;
-  --c-gold:#B8935A;--c-gold-pale:#EDE0CC;--c-gold-dim:rgba(184,147,90,.1);
-  --c-muted:#8A7560;--c-border:#DDD5C4;--c-surface:#F3EEE5;
+  --c-gold:#B8935A;--c-muted:#8A7560;--c-border:#DDD5C4;--c-surface:#F3EEE5;
   --ice-bg:#F0F6FA;--ice-dark:#0A2333;--ice-mid:#1566A0;
   --ice-accent:#1A8FC4;--ice-muted:#4E7E99;--ice-border:#B0D4E8;--ice-surface:#E2F0F8;
   --tea-bg:#F2F7EF;--tea-dark:#142214;--tea-mid:#2A6832;
@@ -78,6 +77,10 @@ body.pizza .nav{background:rgba(42,31,24,.75)}
   opacity:.85;
   font-weight:500;
 }
+.nb:not(.on):hover{opacity:.75}
+.nb:active{opacity:.75}
+.row:active{background:rgba(var(--th-accent-rgb),.1)}
+@media(hover:none){.row:hover{background:unset}}
 
 .pizza-cta-wrap{width:100%}
 .pizza-nav-box{
@@ -148,9 +151,7 @@ body.pizza .extra-pill{border-color:#3A2E24;color:#CFC0A8;background:#2A1F18}
 .extra-price{font-weight:600;color:var(--th-accent)}
 
 .dl{display:flex;align-items:center;gap:12px}
-.dl-inner{display:flex;align-items:center;gap:7px;white-space:nowrap}
 .dl-text{font-size:8px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--th-accent);transition:color .5s}
-.dl-gem{width:4px;height:4px;background:var(--th-accent);transform:rotate(45deg);opacity:.55;flex-shrink:0;transition:background .5s}
 .dl::before,.dl::after{content:'';flex:1;height:1px;background:var(--th-border);transition:background .5s}
 
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;border-bottom:1px solid var(--th-border);padding-left:12px;padding-right:12px;transition:background .25s;position:relative;overflow:hidden}
@@ -207,7 +208,6 @@ body.pizza .extra-pill{border-color:#3A2E24;color:#CFC0A8;background:#2A1F18}
 }
 .rw.open .row::before{content:none}
 .rw.open .rname{color:var(--th-accent)}
-/* rw.open .rname — var(--th-accent) base kuralda */
 .row:last-child{border-bottom:none}
 
 .rname-wrap{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -283,13 +283,11 @@ body.pizza .rinfo-inner{background:linear-gradient(180deg,rgba(var(--th-accent-r
   background:linear-gradient(90deg,transparent,var(--th-accent) 30%,var(--th-accent) 70%,transparent);
   opacity:.2;
 }
-/* rinfo-inner::before — var(--th-accent) base kuralda */
 .rinfo-inner::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:70px;
   background:linear-gradient(to bottom,transparent,rgba(var(--th-accent-rgb),.05));
   pointer-events:none;
 }
-/* rinfo-inner::after — rgba(var(--th-accent-rgb),.05) base kuralda */
 .rinfo-body{
   display:flex;flex-direction:column;gap:12px;
   padding:18px 22px 20px 20px;
@@ -329,7 +327,6 @@ body.pizza .rinfo-inner{background:linear-gradient(180deg,rgba(var(--th-accent-r
   opacity:.3;
 }
 .rinfo-icon::after{background:linear-gradient(90deg,var(--th-accent),transparent)}
-/* rinfo-icon color ve gradients — var(--th-accent) base kurallarda */
 .rinfo-text{
   font-family:'Outfit',sans-serif;font-weight:300;
   color:var(--th-muted);line-height:1.85;transition:color .5s;
@@ -371,7 +368,7 @@ body.pizza .a-pill{background:#2A1F18}
 .sec.on{display:block;animation:sec-fadein .32s ease}
 @keyframes sec-fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── PIZZA BUILDER — kompakt & rafine yeniden tasarım ── */
+/* ── PIZZA BUILDER ── */
 .pizza-builder{
   background:linear-gradient(170deg,#1A1210 0%,#110D08 60%,#0E0A06 100%);
   border:1px solid #2E2018;border-radius:14px;overflow:hidden;
@@ -399,10 +396,6 @@ body.pizza .a-pill{background:#2A1F18}
   color:#EDE5D8;line-height:1;letter-spacing:-1px;
 }
 .pb-header-title em{font-style:italic;color:var(--pizza-gold);font-weight:300}
-.pb-header-sub{
-  font-family:'Outfit',sans-serif;font-size:8px;font-weight:300;
-  letter-spacing:3px;text-transform:uppercase;color:#9A8878;margin-top:6px;
-}
 .pb-inner{padding:16px 18px 20px;position:relative;z-index:1}
 .pb-section{margin-bottom:14px}
 .pb-section:last-of-type{margin-bottom:0}
@@ -431,24 +424,11 @@ body.pizza .a-pill{background:#2A1F18}
   line-height:1.3;letter-spacing:.2px;
 }
 .pb-tag:hover{background:rgba(184,58,34,.10);border-color:rgba(184,58,34,.45);color:#D4B8A8}
-.pb-tag:active{background:rgba(184,58,34,.22);border-color:rgba(184,58,34,.8)}
+.pb-tag:active,.pb-tag.on{background:rgba(184,58,34,.18);border-color:rgba(184,58,34,.65);color:#F0C8B0;font-weight:500}
+.pb-tag.on{box-shadow:0 0 8px rgba(184,58,34,.15),inset 0 1px 0 rgba(255,255,255,.05)}
+.pb-tag.locked{background:transparent;border-color:rgba(255,255,255,.03);color:#2E2018;cursor:default;opacity:.4;font-style:italic}
 .pb-size:active{background:rgba(var(--th-accent-rgb),.1);border-color:rgba(var(--th-accent-rgb),.55)}
 .pizza-order-shortcut:active{background:rgba(184,58,34,.22)}
-.nb:not(.on):hover{opacity:.75}
-.nb:active{opacity:.75}
-.row:active{background:rgba(var(--th-accent-rgb),.1)}
-@media(hover:none){
-  .row:hover{background:unset}
-}
-.pb-tag.on{
-  background:rgba(184,58,34,.18);border-color:rgba(184,58,34,.65);
-  color:#F0C8B0;font-weight:500;
-  box-shadow:0 0 8px rgba(184,58,34,.15),inset 0 1px 0 rgba(255,255,255,.05);
-}
-.pb-tag.locked{
-  background:transparent;border-color:rgba(255,255,255,.03);color:#2E2018;
-  cursor:default;opacity:.4;font-style:italic;
-}
 .pb-size-row{display:flex;gap:6px}
 .pb-size{
   font-family:'Cormorant Garamond',serif;font-weight:400;font-size:25px;
@@ -502,7 +482,6 @@ body.pizza .a-pill{background:#2A1F18}
   color:#9A8878;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);
   border-radius:3px;padding:3px 8px;
 }
-.pb-drink-price{font-size:10px;font-weight:500;color:var(--pizza-gold);opacity:.85;margin-left:3px}
 .pb-reset{
   font-family:'Outfit',sans-serif;font-size:7.5px;font-weight:500;
   letter-spacing:2.5px;text-transform:uppercase;color:#8A7A68;
@@ -1429,7 +1408,7 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
         btn2.setAttribute('data-i18n', 'text');
         btn2.setAttribute('data-i18n-tr', ingTr);
         btn2.setAttribute('data-i18n-en', ingEn);
-        btn2.innerHTML = (ing.default || ing.locked ? '' : '') + esc(ingTr);
+        btn2.innerHTML = esc(ingTr);
         tagsDiv.appendChild(btn2);
       });
       secDiv.appendChild(tagsDiv);
@@ -1819,9 +1798,10 @@ function initPizzaPresets() {
     builder.querySelectorAll('.pb-tag[data-ing]').forEach(function(b) {
       if (ings.indexOf(b.getAttribute('data-ing').toLocaleLowerCase('tr')) > -1) b.classList.add('on');
     });
-    builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
-      r.querySelector('.pb-step-count').textContent = '1';
-      r.classList.remove('active');
+    builder.querySelectorAll('.pb-drink-chip').forEach(function(c) {
+      var cEl = c.querySelector('.pb-dc-count');
+      if (cEl) cEl.textContent = '\u00D71';
+      c.classList.remove('active');
     });
     builder.dispatchEvent(new Event('preset-loaded'));
     builder.classList.remove('preset-loaded');
