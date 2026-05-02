@@ -44,7 +44,7 @@ var MENU_DATA = {
       "hero": {
         "eyebrow": {
           "tr": "El yapımı içecekler",
-          "en": "Handcrafted drinks"
+          "en": "El yapımı içecekler"
         },
         "title": {
           "tr": "Kahve<br><em>Menüsü</em>",
@@ -56,7 +56,7 @@ var MENU_DATA = {
         },
         "foot": {
           "tr": "Kahve Menüsü",
-          "en": "Coffee Menu"
+          "en": "Kahve Menüsü"
         }
       },
       "sections": [
@@ -682,7 +682,7 @@ var MENU_DATA = {
       "hero": {
         "eyebrow": {
           "tr": "Soğuk içecekler",
-          "en": "Cold drinks"
+          "en": "Soğuk içecekler"
         },
         "title": {
           "tr": "Soğuk İçecekler<br><em>Menüsü</em>",
@@ -694,7 +694,7 @@ var MENU_DATA = {
         },
         "foot": {
           "tr": "Soğuk İçecekler Menüsü",
-          "en": "Cold Drinks Menu"
+          "en": "Soğuk İçecekler Menüsü"
         }
       },
       "sections": [
@@ -1024,7 +1024,7 @@ var MENU_DATA = {
         },
         "foot": {
           "tr": "Çay Menüsü",
-          "en": "Tea Menu"
+          "en": "Çay Menüsü"
         }
       },
       "sections": [
@@ -1304,7 +1304,7 @@ var MENU_DATA = {
       "hero": {
         "eyebrow": {
           "tr": "Özel ürünler",
-          "en": "Special products"
+          "en": "Özel ürünler"
         },
         "title": {
           "tr": "Diğer<br><em>Ürünler</em>",
@@ -1316,7 +1316,7 @@ var MENU_DATA = {
         },
         "foot": {
           "tr": "Diğer Ürünler",
-          "en": "Other Products"
+          "en": "Diğer Ürünler"
         }
       },
       "sections": [
@@ -1814,7 +1814,7 @@ var MENU_DATA = {
       },
       "note": {
         "tr": "Pizza alan kişilere çaylarımız ikramdır.",
-        "en": "Complimentary tea with every pizza order."
+        "en": ""
       }
     }
   ]
