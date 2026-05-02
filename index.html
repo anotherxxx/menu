@@ -522,50 +522,49 @@ body.pizza .a-pill{background:#2A1F18}
 .pb-order-btn:active{transform:scale(.985);box-shadow:0 2px 8px rgba(184,56,40,.25)}
 .pb-order-btn svg{width:14px;height:14px;flex-shrink:0;opacity:.8}
 
-.pb-drink-list{display:flex;flex-direction:column;gap:1px;border:1px solid rgba(255,255,255,.05);border-radius:8px;overflow:hidden}
-.pb-drink-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 12px;background:rgba(255,255,255,.015);
-  transition:background .18s;
+/* ── İçecek chips — yeni kompakt tasarım ── */
+.pb-drink-chips{display:flex;flex-wrap:wrap;gap:5px}
+.pb-drink-chip{
+  display:inline-flex;align-items:center;
+  padding:5px 10px 5px 8px;
+  border:1px solid rgba(255,255,255,.07);border-radius:20px;
+  background:rgba(255,255,255,.02);
+  font-family:'Outfit',sans-serif;
+  cursor:pointer;transition:all .18s;
+  -webkit-appearance:none;appearance:none;touch-action:manipulation;
 }
-.pb-drink-row.active{background:rgba(184,58,34,.07)}
-.pb-drink-info{display:flex;align-items:baseline;gap:7px}
-.pb-drink-name{font-family:'Outfit',sans-serif;font-size:12px;font-weight:400;color:#8A7868;transition:color .18s;letter-spacing:.2px}
-.pb-drink-unit-price{font-family:'Outfit',sans-serif;font-size:9.5px;font-weight:400;color:#5A4030;letter-spacing:.5px}
-.pb-drink-row.active .pb-drink-name{color:#F0C8B0}
-/* Kompakt stepper */
-.pb-drink-ctrl{display:flex;align-items:center;gap:5px}
-.pb-stepper-left{
-  display:flex;align-items:center;gap:4px;
-  overflow:hidden;max-width:0;opacity:0;
-  transition:max-width .2s ease,opacity .18s ease;
+.pb-drink-chip:hover{border-color:rgba(184,58,34,.3);background:rgba(184,58,34,.05)}
+.pb-drink-chip.active{
+  border-color:rgba(184,58,34,.6);
+  background:rgba(184,58,34,.14);
+  padding-left:5px;
 }
-.pb-drink-row.active .pb-stepper-left{max-width:68px;opacity:1}
-.pb-step-minus{
-  width:20px;height:20px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.08);background:transparent;
-  color:#6A5040;cursor:pointer;font-size:13px;line-height:1;
-  display:flex;align-items:center;justify-content:center;
+.pb-dc-minus{
+  display:none;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;
+  border:1px solid rgba(184,58,34,.4);
+  font-size:12px;line-height:1;color:rgba(184,58,34,.8);
+  margin-right:6px;flex-shrink:0;
   transition:border-color .15s,color .15s;
-  -webkit-appearance:none;appearance:none;touch-action:manipulation;
-  flex-shrink:0;
 }
-.pb-step-minus:hover{border-color:rgba(184,58,34,.6);color:#D09080}
-.pb-step-count{
-  font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;
-  color:var(--pizza-gold);min-width:12px;text-align:center;
+.pb-drink-chip.active .pb-dc-minus{display:flex}
+.pb-dc-minus:hover{border-color:#B83A22;color:#D05030}
+.pb-dc-label{
+  font-size:11px;font-weight:400;color:#7A6A58;
+  transition:color .18s;white-space:nowrap;
 }
-.pb-step-plus{
-  width:20px;height:20px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.08);background:transparent;
-  color:#6A5040;cursor:pointer;font-size:14px;line-height:1;
-  display:flex;align-items:center;justify-content:center;
-  transition:border-color .15s,color .15s,background .15s;
-  -webkit-appearance:none;appearance:none;touch-action:manipulation;
-  flex-shrink:0;
+.pb-drink-chip.active .pb-dc-label{color:#ECC090}
+.pb-dc-price{
+  font-size:9px;font-weight:400;color:#4A3828;
+  margin-left:5px;white-space:nowrap;transition:color .18s;
 }
-.pb-step-plus:hover{border-color:rgba(184,58,34,.6);color:#D09080}
-.pb-drink-row.active .pb-step-plus{border-color:rgba(184,58,34,.5);color:#C08070}
+.pb-drink-chip.active .pb-dc-price{color:rgba(200,160,80,.6)}
+.pb-dc-count{
+  display:none;
+  font-size:9px;font-weight:600;color:var(--pizza-gold);
+  margin-left:4px;white-space:nowrap;
+}
+.pb-drink-chip.active .pb-dc-count{display:inline}
 
 .pizza-preset-row{cursor:pointer;position:relative}
 .pizza-preset-row .pb{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
@@ -665,9 +664,10 @@ body.pizza .lang-btn.is-en{background:var(--pizza-gold);border-color:var(--pizza
   .pb-size span{font-size:7px}
   .pb-tags{gap:4px}
   .pb-tag{font-size:10.5px;padding:5px 9px}
-  .pb-drink-row{padding:8px 11px}
-  .pb-drink-name{font-size:11.5px}
-  .pb-step-minus,.pb-step-plus{width:20px;height:20px;font-size:13px}
+  .pb-drink-chips{gap:4px}
+  .pb-drink-chip{padding:4px 9px 4px 7px}
+  .pb-dc-label{font-size:10.5px}
+  .pb-dc-minus{width:15px;height:15px;font-size:11px}
   .pb-summary{padding:10px 12px}
   .pb-summary-text{font-size:11px}
   .pb-summary-price{font-size:14px;margin-top:9px;padding-top:9px}
@@ -1240,38 +1240,25 @@ function makePizzaBuilder(builder, noteTr, noteEn) {
         ' <span class="pb-sec-optional" data-i18n="text" data-i18n-tr="(opsiyonel)" data-i18n-en="(optional)">(opsiyonel)</span>';
       secDiv.appendChild(lbl);
 
-      var drinkList = document.createElement('div');
-      drinkList.className = 'pb-drink-list';
+      var drinkChips = document.createElement('div');
+      drinkChips.className = 'pb-drink-chips';
       (sec.items || []).forEach(function(drink) {
         var dTr  = (drink.label && drink.label.tr) ? drink.label.tr : drink.id;
         var dEn  = (drink.label && drink.label.en) ? drink.label.en : dTr;
-        var noteStr   = drink.note ? drink.note.tr : (drink.price > 0 ? drink.price + '\u20BA' : '\u20BA0');
-        var noteStrEn = drink.note ? (drink.note.en || noteStr) : noteStr;
-        var unitPriceAttrs = drink.note
-          ? ' data-i18n="text" data-i18n-tr="' + esc(drink.note.tr) + '" data-i18n-en="' + esc(noteStrEn) + '"'
-          : '';
-        var dRow = document.createElement('div');
-        dRow.className = 'pb-drink-row';
-        dRow.setAttribute('data-drink', drink.id);
-        dRow.setAttribute('data-price', drink.price || 0);
-        dRow.innerHTML =
-          '<div class="pb-drink-info">' +
-            '<span class="pb-drink-name" data-i18n="text" data-i18n-tr="' + esc(dTr) + '" data-i18n-en="' + esc(dEn) + '">' + esc(dTr) + '</span>' +
-            '<span class="pb-drink-unit-price"' + unitPriceAttrs +
-              (drink.note ? ' style="color:var(--pizza-gold)"' : '') + '>' +
-              esc(noteStr) +
-            '</span>' +
-          '</div>' +
-          '<div class="pb-drink-ctrl">' +
-            '<div class="pb-stepper-left">' +
-              '<button class="pb-step-minus" aria-label="azalt">\u2212</button>' +
-              '<span class="pb-step-count">1</span>' +
-            '</div>' +
-            '<button class="pb-step-plus" aria-label="art\u0131r">+</button>' +
-          '</div>';
-        drinkList.appendChild(dRow);
+        var priceStr = drink.price > 0 ? '+' + drink.price + '\u20BA' : '\u20BA0';
+        var chip = document.createElement('button');
+        chip.className = 'pb-drink-chip';
+        chip.setAttribute('data-drink', drink.id);
+        chip.setAttribute('data-price', drink.price || 0);
+        chip.type = 'button';
+        chip.innerHTML =
+          '<span class="pb-dc-minus" aria-hidden="true">\u2212</span>' +
+          '<span class="pb-dc-label" data-i18n="text" data-i18n-tr="' + esc(dTr) + '" data-i18n-en="' + esc(dEn) + '">' + esc(dTr) + '</span>' +
+          '<span class="pb-dc-price">' + esc(priceStr) + '</span>' +
+          '<span class="pb-dc-count">×1</span>';
+        drinkChips.appendChild(chip);
       });
-      secDiv.appendChild(drinkList);
+      secDiv.appendChild(drinkChips);
 
       if (noteTr) {
         var pnote = document.createElement('div');
@@ -1524,23 +1511,30 @@ function initPizzaBuilder(builderData) {
     }, {passive: true});
   });
 
-  builder.querySelectorAll('.pb-drink-row').forEach(function(row) {
-    var countEl = row.querySelector('.pb-step-count');
+  builder.querySelectorAll('.pb-drink-chip').forEach(function(chip) {
     var qty = 0;
-    row.querySelector('.pb-step-plus').addEventListener('click', function(e) {
-      e.stopPropagation();
+    var countEl = chip.querySelector('.pb-dc-count');
+    var minusEl = chip.querySelector('.pb-dc-minus');
+
+    chip.addEventListener('click', function(e) {
+      /* − butonu: adet azalt */
+      if (e.target === minusEl || minusEl.contains(e.target)) {
+        e.stopPropagation();
+        qty = Math.max(0, qty - 1);
+        if (qty === 0) {
+          chip.classList.remove('active');
+        } else {
+          countEl.textContent = '\u00D7' + qty;
+        }
+        updateSummary();
+        return;
+      }
+      /* chip gövdesi: seç / adedi artır */
       qty++;
-      countEl.textContent = qty;
-      row.classList.add('active');
+      chip.classList.add('active');
+      countEl.textContent = '\u00D7' + qty;
       updateSummary();
-    });
-    row.querySelector('.pb-step-minus').addEventListener('click', function(e) {
-      e.stopPropagation();
-      qty = Math.max(0, qty - 1);
-      countEl.textContent = qty || 1;
-      if (qty === 0) row.classList.remove('active');
-      updateSummary();
-    });
+    }, {passive: true});
   });
 
   resetBtn.addEventListener('click', function() {
@@ -1554,9 +1548,10 @@ function initPizzaBuilder(builderData) {
         }
       });
     });
-    builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
-      r.querySelector('.pb-step-count').textContent = '1';
-      r.classList.remove('active');
+    builder.querySelectorAll('.pb-drink-chip').forEach(function(c) {
+      var cEl = c.querySelector('.pb-dc-count');
+      if (cEl) cEl.textContent = '\u00D71';
+      c.classList.remove('active');
     });
     builder.querySelectorAll('.pb-size').forEach(function(b) { b.classList.remove('on'); });
     var defaultSizeBtn = builder.querySelector('.pb-size');
@@ -1570,13 +1565,13 @@ function initPizzaBuilder(builderData) {
 
   orderBtn.addEventListener('click', function() {
     var drinkPartsO = [], drinkPriceO = 0;
-    builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
-      if (!r.classList.contains('active')) return;
-      var n = parseInt(r.querySelector('.pb-step-count').textContent);
+    builder.querySelectorAll('.pb-drink-chip').forEach(function(c) {
+      if (!c.classList.contains('active')) return;
+      var n = parseInt((c.querySelector('.pb-dc-count').textContent || '1').replace('\u00D7',''));
       if (n > 0) {
-        var nameTrO = r.querySelector('.pb-drink-name').getAttribute('data-i18n-tr') || r.getAttribute('data-drink');
+        var nameTrO = c.querySelector('.pb-dc-label').getAttribute('data-i18n-tr') || c.getAttribute('data-drink');
         drinkPartsO.push(nameTrO + (n > 1 ? ' x' + n : ''));
-        drinkPriceO += parseInt(r.getAttribute('data-price')) * n;
+        drinkPriceO += parseInt(c.getAttribute('data-price')) * n;
       }
     });
     var totalPriceO = currentPrice + drinkPriceO;
@@ -1632,14 +1627,14 @@ function initPizzaBuilder(builderData) {
       }
     });
     var drinkParts = [], drinkPrice = 0;
-    builder.querySelectorAll('.pb-drink-row').forEach(function(r) {
-      if (!r.classList.contains('active')) return;
-      var n = parseInt(r.querySelector('.pb-step-count').textContent);
+    builder.querySelectorAll('.pb-drink-chip').forEach(function(c) {
+      if (!c.classList.contains('active')) return;
+      var n = parseInt((c.querySelector('.pb-dc-count').textContent || '1').replace('\u00D7',''));
       if (n > 0) {
-        var nameTr = r.querySelector('.pb-drink-name').getAttribute('data-i18n-tr') || r.getAttribute('data-drink');
-        var nameEn = r.querySelector('.pb-drink-name').getAttribute('data-i18n-en') || nameTr;
+        var nameTr = c.querySelector('.pb-dc-label').getAttribute('data-i18n-tr') || c.getAttribute('data-drink');
+        var nameEn = c.querySelector('.pb-dc-label').getAttribute('data-i18n-en') || nameTr;
         drinkParts.push((currentLang === 'en' ? nameEn : nameTr) + (n > 1 ? ' x' + n : ''));
-        drinkPrice += parseInt(r.getAttribute('data-price')) * n;
+        drinkPrice += parseInt(c.getAttribute('data-price')) * n;
       }
     });
     var totalPrice = currentPrice + drinkPrice;
