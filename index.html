@@ -512,15 +512,16 @@ body.pizza .a-pill{background:#2A1F18}
   display:inline-flex;align-items:center;justify-content:center;
   padding:7px 13px 7px 9px;
   border:1px solid rgba(255,255,255,.09);border-radius:6px;
-  background:rgba(255,255,255,.02);
+  background:rgba(255,255,255,.03);
   font-family:'Outfit',sans-serif;
   cursor:pointer;transition:all .18s;
   -webkit-appearance:none;appearance:none;touch-action:manipulation;
 }
-.pb-drink-chip:hover{border-color:rgba(184,58,34,.3);background:rgba(184,58,34,.05)}
+.pb-drink-chip:hover{border-color:rgba(184,58,34,.45);background:rgba(184,58,34,.10)}
 .pb-drink-chip.active{
-  border-color:rgba(184,58,34,.6);
-  background:rgba(184,58,34,.14);
+  border-color:rgba(184,58,34,.65);
+  background:rgba(184,58,34,.18);
+  box-shadow:0 0 8px rgba(184,58,34,.15),inset 0 1px 0 rgba(255,255,255,.05);
   padding-left:7px;
 }
 .pb-dc-minus{
@@ -858,6 +859,7 @@ body.pizza .lang-btn.is-en{background:var(--pizza-gold);border-color:var(--pizza
 .lang-fading-in .extras-wrap{animation-delay:.06s}
 .lang-fading-in .wrap{animation-delay:.10s}
 .lang-fading-in .foot{animation-delay:.14s}
+.tap-hint-hidden{display:none!important}
 .row[role='button']:focus-visible{
   outline:2px solid var(--th-accent);
   outline-offset:-2px;
@@ -1160,7 +1162,9 @@ function makeItemRow(item) {
   /* Açıklama */
   var descTr = (item.desc && item.desc.tr) ? item.desc.tr : (item.desc || '');
   var descEn = (item.desc && item.desc.en) ? item.desc.en : descTr;
-  left.innerHTML += '<div class="rdesc" data-i18n="text" data-i18n-tr="' + esc(descTr) + '" data-i18n-en="' + esc(descEn) + '">' + esc(descTr) + '</div>';
+  if (descTr) {
+    left.innerHTML += '<div class="rdesc" data-i18n="text" data-i18n-tr="' + esc(descTr) + '" data-i18n-en="' + esc(descEn) + '">' + esc(descTr) + '</div>';
+  }
 
   /* Kalori */
   if (item.kcal) {
@@ -1283,7 +1287,7 @@ function makePizzaPresetRow(item) {
 
   row.innerHTML =
     '<div class="row-left">' + nameHtml +
-      '<div class="rdesc" data-i18n="text" data-i18n-tr="' + esc(descTr) + '" data-i18n-en="' + esc(descEn) + '">' + esc(descTr) + '</div>' +
+      (descTr ? '<div class="rdesc" data-i18n="text" data-i18n-tr="' + esc(descTr) + '" data-i18n-en="' + esc(descEn) + '">' + esc(descTr) + '</div>' : '') +
     '</div>' +
     '<div class="pb">' +
       (sizes.length ? '<span class="ps">' + esc(sizes.join(' \u00B7 ')) + '</span>' : '') +
@@ -1511,8 +1515,12 @@ function initAccordion() {
 
     if (!sec.querySelector('.row[data-info]')) return; /* açıklaması olan item yoksa hint gösterme */
 
+    var HINT_KEY = 'menu-tap-hint-seen';
+    var hintSeen = false;
+    try { hintSeen = !!localStorage.getItem(HINT_KEY); } catch(e) {}
+
     var hint = document.createElement('div');
-    hint.className = 'tap-hint';
+    hint.className = 'tap-hint' + (hintSeen ? ' tap-hint-hidden' : '');
     hint.innerHTML =
       '<div class="tap-hint-badge">' +
         '<span class="tap-hint-text" data-i18n="text" data-i18n-tr="daha fazla bilgi için ürüne dokun" data-i18n-en="tap item for more info">daha fazla bilgi için ürüne dokun</span>' +
@@ -1562,6 +1570,11 @@ function initAccordion() {
 
       row.addEventListener('click', function(e) {
         if (e.target.closest('.abox,.allergen-note,.rinfo')) return;
+        /* Hint'i kalıcı gizle */
+        if (hint && !hint.classList.contains('tap-hint-hidden')) {
+          hint.classList.add('tap-hint-hidden');
+          try { localStorage.setItem(HINT_KEY, '1'); } catch(e) {}
+        }
         row.classList.add('no-slide');
         setTimeout(function() { row.classList.remove('no-slide'); }, 400);
         var wasOpen = rw.classList.contains('open');
