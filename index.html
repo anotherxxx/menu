@@ -1280,9 +1280,6 @@ function makePizzaPresetRow(item) {
 
   var sizes  = item.sizes  || [];
   var prices = item.prices || [];
-  var priceDisplay = prices.length === 1
-    ? prices[0] + '\u20BA'
-    : (prices.length > 1 ? prices[0] + '\u2013' + prices[prices.length - 1] + '\u20BA' : '');
 
   row.innerHTML =
     '<div class="row-left">' + nameHtml +
@@ -1290,7 +1287,7 @@ function makePizzaPresetRow(item) {
     '</div>' +
     '<div class="pb">' +
       (sizes.length ? '<span class="ps">' + esc(sizes.join(' \u00B7 ')) + '</span>' : '') +
-      (priceDisplay ? '<span class="pv">' + esc(priceDisplay) + '</span>' : '') +
+      (prices.length ? '<span class="pv">' + esc(prices.join(' \u00B7 ')) + '\u20BA</span>' : '') +
       '<button class="pizza-order-shortcut" data-i18n="text" data-i18n-tr="Sipari\u015F Ver" data-i18n-en="Order Now">Sipari\u015F Ver</button>' +
     '</div>';
   return row;
